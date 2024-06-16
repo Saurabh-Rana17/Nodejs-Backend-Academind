@@ -1,6 +1,6 @@
 console.clear();
 import http from "http";
-import fs from "fs";
+import fs from "fs/promises";
 
 const server = http.createServer((req, res) => {
   const { headers, url, method } = req;
@@ -21,20 +21,25 @@ const server = http.createServer((req, res) => {
       body.push(chunk);
     });
 
-    req.on("end", () => {
+    return req.on("end", async () => {
       const parsedBody = Buffer.concat(body).toString();
       const data = parsedBody.split("=")[1];
-      fs.writeFileSync("./src/message.txt", data);
+      // fs.writeFileSync("./src/message.txt", data);
+      try {
+        await fs.writeFile("./src/message", data);
+      } catch (error) {
+        console.log(error);
+      }
+      res.statusCode = 302;
+      res.setHeader("Location", "/");
+      return res.end();
     });
-
-    res.statusCode = 302;
-    res.setHeader("Location", "/");
-
-    return res.end();
   }
 
   res.write("<H1>404 Page not found</h1>");
   res.end();
 });
 
-server.listen(3000);
+server.listen(3000, () => {
+  console.log("listening on port 3000");
+});
