@@ -32,7 +32,7 @@ const requestHandler = (req: IncomingMessage, res: ServerResponse) => {
     });
   }
 
-  res.write("<H1>404 Page not found</h1>");
+  res.write("<H1> 404 Page not found</h1>");
   res.end();
 };
 

@@ -1,1 +1,0 @@
-this text is from read.txt file
