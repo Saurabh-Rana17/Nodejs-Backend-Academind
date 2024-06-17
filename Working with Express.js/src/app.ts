@@ -7,6 +7,7 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import rootDir from "./utils/path";
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/admin", adminRoutes);
