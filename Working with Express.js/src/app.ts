@@ -1,7 +1,28 @@
-import express from "express";
-import { Express } from "express";
-const app: Express = express();
+import express, { NextFunction, Request, Response } from "express";
 
-app.listen(3000, (): void => {
-  console.log("App running on Port 3000");
+const app = express();
+
+app.get(
+  "/favicon.ico",
+  (req: Request, res: Response, next: NextFunction) => {}
+);
+
+app.use((req, res, next) => {
+  console.log("this always run");
+  next();
+});
+
+app.use("/add-product", (req, res, next) => {
+  console.log("add-product");
+
+  res.send("not home ");
+});
+
+app.use("/", (req, res, next) => {
+  console.log(req.url);
+  res.send("404");
+});
+
+app.listen(3000, () => {
+  console.log("listening on port 3000");
 });
