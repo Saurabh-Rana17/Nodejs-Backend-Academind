@@ -8,6 +8,6 @@ const admin_1 = require("./admin");
 const router = express_1.default.Router();
 router.get("/", (req, res, next) => {
     console.log(admin_1.products);
-    res.render("shop");
+    res.render("shop", { title: "Home Page" });
 });
 exports.default = router;
