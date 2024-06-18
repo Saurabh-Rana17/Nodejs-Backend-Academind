@@ -1,4 +1,4 @@
-import { Application, NextFunction, Router } from "express";
+import { Router } from "express";
 import { Todo } from "../models/todo";
 import { Response, Request } from "express";
 let todos: Todo[] = [];
