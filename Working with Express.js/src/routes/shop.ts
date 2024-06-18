@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", (req, res, next) => {
   console.log(products);
-  res.render("shop");
+  res.render("shop", { title: "Home Page" });
 });
 
 export default router;
