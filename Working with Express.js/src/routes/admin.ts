@@ -3,14 +3,16 @@ import * as path from "path";
 import rootDir from "../utils/path";
 
 const router = express.Router();
+const products: string[] = [];
 
 router.get("/add-product", (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views", "add-product.html"));
+  res.render("add-product", { title: "Add Product Page" });
 });
 
 router.post("/add-product", (req, res) => {
-  console.log(req.body);
+  products.push(req.body.title);
   res.redirect("/");
 });
 
+export { products };
 export default router;
