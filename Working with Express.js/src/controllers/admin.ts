@@ -16,16 +16,3 @@ export const postAddProduct = (req: Request, res: Response) => {
   product.save();
   res.redirect("/");
 };
-
-export const getProducts = (req: Request, res: Response) => {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCSS: true,
-    });
-  });
-};
