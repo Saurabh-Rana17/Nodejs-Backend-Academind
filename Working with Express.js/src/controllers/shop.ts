@@ -28,3 +28,9 @@ export const getCart = (req: Request, res: Response) => {
 export const getOrders = (req: Request, res: Response) => {
   res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
 };
+
+export const getProduct = (req: Request, res: Response) => {
+  const prodId: string = req.params.prodId;
+  console.log(prodId);
+  res.redirect("/");
+};

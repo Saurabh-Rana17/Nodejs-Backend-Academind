@@ -3,6 +3,10 @@ import * as fs from "fs";
 
 interface product {
   title: string;
+  id: string;
+  imageUrl: string;
+  price: number;
+  description: string;
 }
 
 type callBack = (products: product[]) => void;
@@ -21,6 +25,7 @@ function getAllProductFromFile(cb: callBack) {
 }
 
 export class Product implements product {
+  id: string = "";
   constructor(
     public title: string,
     public imageUrl: string,
@@ -29,6 +34,7 @@ export class Product implements product {
   ) {}
 
   save(): void {
+    this.id = Math.random().toString();
     getAllProductFromFile((products: product[]) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err) => {});
