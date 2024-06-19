@@ -24,3 +24,7 @@ export const getIndex = (req: Request, res: Response) => {
 export const getCart = (req: Request, res: Response) => {
   res.render("shop/cart", { pageTitle: "Cart", path: "/cart" });
 };
+
+export const getOrders = (req: Request, res: Response) => {
+  res.render("shop/order", { pageTitle: "Orders", path: "/orders" });
+};
