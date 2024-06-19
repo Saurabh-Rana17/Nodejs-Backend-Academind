@@ -4,6 +4,7 @@ import * as fs from "fs";
 interface product {
   title: string;
 }
+
 type callBack = (products: product[]) => void;
 
 const p = path.join(__dirname, "..", "data", "data.json");
