@@ -5,6 +5,7 @@ const app = express();
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
+import { notFound } from "./controllers/404";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -14,11 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-app.use((req, res) => {
-  res
-    .status(404)
-    .render("404", { pageTitle: "404,Page Not Found", path: "404" });
-});
+app.use(notFound);
 
 app.listen(3000, () => {
   console.log("listening on port 3000");

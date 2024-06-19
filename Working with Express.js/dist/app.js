@@ -38,7 +38,9 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/admin", admin_1.default);
 app.use(shop_1.default);
 app.use((req, res) => {
-    res.status(404).render("404", { title: "404,Page Not Found" });
+    res
+        .status(404)
+        .render("404", { pageTitle: "404,Page Not Found", path: "404" });
 });
 app.listen(3000, () => {
     console.log("listening on port 3000");

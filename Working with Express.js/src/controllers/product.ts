@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-
-export const products: { title: string }[] = [];
-
+import { Product } from "../models/product";
 export const getAddproduct = (req: Request, res: Response) => {
   res.render("add-product", {
     pageTitle: "Add Product",
@@ -13,11 +11,14 @@ export const getAddproduct = (req: Request, res: Response) => {
 };
 
 export const postAddProduct = (req: Request, res: Response) => {
-  products.push({ title: req.body.title });
+  const product = new Product(req.body.title);
+
+  product.save();
   res.redirect("/");
 };
 
 export const getProducts = (req: Request, res: Response) => {
+  const products = Product.fetchAll();
   res.render("shop", {
     prods: products,
     pageTitle: "Shop",
