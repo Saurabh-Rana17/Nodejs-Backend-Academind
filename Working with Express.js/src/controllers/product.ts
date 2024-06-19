@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Product } from "../models/product";
+
 export const getAddproduct = (req: Request, res: Response) => {
   res.render("add-product", {
     pageTitle: "Add Product",

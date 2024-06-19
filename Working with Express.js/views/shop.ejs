@@ -5,8 +5,8 @@
   <body>
     <%- include('./includes/navigation') %>
     <main>
-      <% if(prods.length > 0) { %> <% for(let prod of prods ) { %>
       <div class="grid">
+      <% if(prods.length > 0) { %> <% for(let prod of prods ) { %>
         <article class="card product-item">
           <header class="card__header">
             <h1 class="product__title"><%= prod.title %></h1>
@@ -28,8 +28,8 @@
             <button class="btn">Add to Cart</button>
           </div>
         </article>
-      </div>
-      <% } %> <% } else { %>
+        <% } %> <% } else { %>
+        </div>
       <h1>No products Added</h1>
       <% } %>
     </main>

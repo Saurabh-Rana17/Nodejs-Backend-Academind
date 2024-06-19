@@ -4,8 +4,20 @@ import * as fs from "fs";
 interface product {
   title: string;
 }
+type callBack = (products: product[]) => void;
 
-type callBack = (product: product[]) => void;
+const p = path.join(__dirname, "..", "data", "data.json");
+
+function getAllProductFromFile(cb: callBack) {
+  fs.readFile(p, (err, data) => {
+    let products: product[] = [];
+    if (!err) {
+      products = JSON.parse(data as unknown as string);
+    }
+
+    cb(products);
+  });
+}
 
 export class Product implements product {
   constructor(public title: string) {
@@ -13,27 +25,13 @@ export class Product implements product {
   }
 
   save(): void {
-    const p = path.join(__dirname, "..", "data", "data.json");
-    fs.readFile(p, (err, data) => {
-      let products: product[] = [];
-      if (!err) {
-        products = JSON.parse(data as unknown as string);
-      }
+    getAllProductFromFile((products: product[]) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err) => {});
     });
   }
 
   static fetchAll(cb: callBack) {
-    const p = path.join(__dirname, "..", "data", "data.json");
-    let products: product[] = [];
-
-    fs.readFile(p, (err, data) => {
-      if (!err) {
-        products = JSON.parse(data as unknown as string);
-      }
-
-      return cb(products);
-    });
+    getAllProductFromFile(cb);
   }
 }
