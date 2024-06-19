@@ -22,23 +22,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Product = void 0;
 const path = __importStar(require("path"));
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-const admin_1 = __importDefault(require("./routes/admin"));
-const shop_1 = __importDefault(require("./routes/shop"));
-const _404_1 = require("./controllers/404");
-app.set("view engine", "ejs");
-app.set("views", "views");
-app.use(express_1.default.static(path.join(__dirname, "..", "public")));
-app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/admin", admin_1.default);
-app.use(shop_1.default);
-app.use(_404_1.notFound);
-app.listen(3000, () => {
-    console.log("listening on port 3000");
-});
+const fs = __importStar(require("fs"));
+class Product {
+    constructor(title) {
+        this.title = title;
+        this.title = title;
+    }
+    save() {
+        const p = path.join(__dirname, "..", "data", "data.json");
+        fs.readFile(p, (err, data) => {
+            let products = [];
+            if (!err) {
+                products = JSON.parse(data);
+            }
+            products.push(this);
+            fs.writeFile(p, JSON.stringify(products), (err) => { });
+        });
+    }
+    static fetchAll(cb) {
+        const p = path.join(__dirname, "..", "data", "data.json");
+        let products = [];
+        fs.readFile(p, (err, data) => {
+            if (!err) {
+                products = JSON.parse(data);
+            }
+            return cb(products);
+        });
+    }
+}
+exports.Product = Product;
