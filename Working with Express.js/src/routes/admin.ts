@@ -1,6 +1,9 @@
 import express from "express";
-import { getAdminProducts } from "../controllers/shop";
-import { getAddproduct, postAddProduct } from "../controllers/admin";
+import {
+  getAddproduct,
+  getAdminProducts,
+  postAddProduct,
+} from "../controllers/admin";
 
 const router = express.Router();
 

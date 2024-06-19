@@ -21,9 +21,12 @@ function getAllProductFromFile(cb: callBack) {
 }
 
 export class Product implements product {
-  constructor(public title: string) {
-    this.title = title;
-  }
+  constructor(
+    public title: string,
+    public imageUrl: string,
+    public price: number,
+    public description: string
+  ) {}
 
   save(): void {
     getAllProductFromFile((products: product[]) => {

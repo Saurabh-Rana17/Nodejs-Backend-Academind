@@ -4,7 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const product_1 = require("../controllers/product");
+const shop_1 = require("../controllers/shop");
 const router = express_1.default.Router();
-router.get("/", product_1.getProducts);
+router.get("/", shop_1.getIndex);
+router.get("/products", shop_1.getProducts);
+router.get("/cart", shop_1.getCart);
+router.get("/checkout");
 exports.default = router;

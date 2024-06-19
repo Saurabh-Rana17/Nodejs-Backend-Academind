@@ -26,31 +26,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
+const p = path.join(__dirname, "..", "data", "data.json");
+function getAllProductFromFile(cb) {
+    fs.readFile(p, (err, data) => {
+        let products = [];
+        if (!err) {
+            products = JSON.parse(data);
+        }
+        cb(products);
+    });
+}
 class Product {
     constructor(title) {
         this.title = title;
         this.title = title;
     }
     save() {
-        const p = path.join(__dirname, "..", "data", "data.json");
-        fs.readFile(p, (err, data) => {
-            let products = [];
-            if (!err) {
-                products = JSON.parse(data);
-            }
+        getAllProductFromFile((products) => {
             products.push(this);
             fs.writeFile(p, JSON.stringify(products), (err) => { });
         });
     }
     static fetchAll(cb) {
-        const p = path.join(__dirname, "..", "data", "data.json");
-        let products = [];
-        fs.readFile(p, (err, data) => {
-            if (!err) {
-                products = JSON.parse(data);
-            }
-            return cb(products);
-        });
+        getAllProductFromFile(cb);
     }
 }
 exports.Product = Product;
