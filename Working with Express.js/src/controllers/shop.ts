@@ -26,5 +26,5 @@ export const getCart = (req: Request, res: Response) => {
 };
 
 export const getOrders = (req: Request, res: Response) => {
-  res.render("shop/order", { pageTitle: "Orders", path: "/orders" });
+  res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
 };
