@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
+const cart_1 = require("./cart");
 const p = path.join(__dirname, "..", "data", "data.json");
 function getAllProductFromFile(cb) {
     fs.readFile(p, (err, data) => {
@@ -37,18 +38,47 @@ function getAllProductFromFile(cb) {
     });
 }
 class Product {
-    constructor(title) {
+    constructor(id, title, imageUrl, price, description) {
         this.title = title;
-        this.title = title;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.description = description;
+        this.id = id;
     }
     save() {
         getAllProductFromFile((products) => {
-            products.push(this);
-            fs.writeFile(p, JSON.stringify(products), (err) => { });
+            if (!this.id) {
+                this.id = Math.random().toString();
+                products.push(this);
+                fs.writeFile(p, JSON.stringify(products), (err) => { });
+            }
+            else {
+                const existingIndex = products.findIndex((el) => el.id === this.id);
+                products[existingIndex] = this;
+                fs.writeFile(p, JSON.stringify(products), (err) => console.log(err));
+            }
+        });
+    }
+    static deleteById(id) {
+        getAllProductFromFile((products) => {
+            const updatedProducts = products.filter((el) => el.id !== id);
+            const productToDelete = products.find((el) => el.id === id);
+            const productPrice = +productToDelete.price;
+            fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+                if (!err) {
+                    cart_1.Cart.deleteProduct(id, productPrice);
+                }
+            });
         });
     }
     static fetchAll(cb) {
         getAllProductFromFile(cb);
+    }
+    static findById(id, cb) {
+        getAllProductFromFile((products) => {
+            const product = products.find((p) => p.id === id);
+            cb(product);
+        });
     }
 }
 exports.Product = Product;

@@ -41,6 +41,7 @@ export const getOrders = (req: Request, res: Response) => {
 
 export const getProduct = (req: Request, res: Response) => {
   const prodId: string = req.params.prodId;
+  console.log("ingetprod", prodId);
   Product.findById(prodId, (product: IProduct) => {
     res.render("shop/product-detail", {
       pageTitle: product.title,
