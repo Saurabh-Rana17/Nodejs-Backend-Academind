@@ -1,12 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import { ICart } from "../types/cart";
+import { Product } from "./product";
 
 const p = path.join(__dirname, "..", "data", "cart.json");
 
 export class Cart {
   static addProduct(id: string, productPrice: number) {
-    //fetch the previous cart
     fs.readFile(p, (err, data) => {
       let cart: ICart = { products: [], totalPrice: 0 };
       if (!err) {
@@ -32,7 +32,21 @@ export class Cart {
         fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
       }
     });
-    //analyze the  cart find existing product
-    // add new product or increase quantity
+  }
+
+  static deleteProduct(id: string, productPrice: number) {
+    fs.readFile(p, (err, data) => {
+      const cart: ICart = JSON.parse(data as unknown as string);
+      const productToDelete = cart.products.find((el) => el.id === id);
+      if (!productToDelete) {
+        console.log("does not exist in cart");
+        return;
+      }
+      const updatedProducts = cart.products.filter((el) => el.id !== id);
+      const productQuantity = productToDelete.qty;
+      cart.products = updatedProducts;
+      cart.totalPrice = cart.totalPrice - productPrice * productQuantity;
+      fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
+    });
   }
 }

@@ -1,6 +1,8 @@
 import * as path from "path";
 import * as fs from "fs";
 import { IProduct } from "../types/product";
+import { json } from "stream/consumers";
+import { Cart } from "./cart";
 
 type callBack = (products: IProduct[]) => void;
 
@@ -40,6 +42,19 @@ export class Product implements IProduct {
         products[existingIndex] = this;
         fs.writeFile(p, JSON.stringify(products), (err) => console.log(err));
       }
+    });
+  }
+
+  static deleteById(id: string) {
+    getAllProductFromFile((products) => {
+      const updatedProducts = products.filter((el) => el.id !== id);
+      const productToDelete = products.find((el) => el.id === id);
+      const productPrice: number = +productToDelete!.price;
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (!err) {
+          Cart.deleteProduct(id, productPrice);
+        }
+      });
     });
   }
 

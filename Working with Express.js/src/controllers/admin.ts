@@ -1,5 +1,6 @@
 import { Request, Response, response } from "express";
 import { Product } from "../models/product";
+import { Cart } from "../models/cart";
 
 interface Body {
   title: string;
@@ -46,6 +47,12 @@ export const postEditProduct = (req: Request, res: Response) => {
   const { id, title, imageUrl, price, description } = req.body;
   const product = new Product(id, title, imageUrl, price, description);
   product.save();
+  res.redirect("/admin/products");
+};
+
+export const postDeleteProduct = (req: Request, res: Response) => {
+  const id = req.params.id;
+  Product.deleteById(id);
   res.redirect("/admin/products");
 };
 
