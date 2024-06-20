@@ -2,12 +2,9 @@ import { Request, Response } from "express";
 import { Product } from "../models/product";
 
 export const getAddproduct = (req: Request, res: Response) => {
-  res.render("admin/add-product", {
+  res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    formsCSS: true,
-    productCSS: true,
-    activeAddProduct: true,
   });
 };
 

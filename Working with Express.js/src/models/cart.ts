@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import { IProduct } from "../types/product";
 import { ICart } from "../types/cart";
 
 const p = path.join(__dirname, "..", "data", "cart.json");
@@ -13,9 +12,25 @@ export class Cart {
       if (!err) {
         cart = JSON.parse(data as unknown as string);
         const productIndex = cart.products.findIndex((el) => el.id === id);
+        let updatedCart = { ...cart };
+        if (productIndex < 0) {
+          console.log("does not exist");
+          cart.products.push({ id: id, qty: 1 });
+          cart.totalPrice += +productPrice;
+          fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
+        } else {
+          console.log("exist");
+          let item = updatedCart.products[productIndex];
+          item.qty = item.qty + 1;
+          updatedCart.products[productIndex] = item;
+          updatedCart.totalPrice += +productPrice;
+          fs.writeFile(p, JSON.stringify(updatedCart), (err) =>
+            console.log(err)
+          );
+        }
       } else {
         cart.products.push({ id: id, qty: 1 });
-        cart.totalPrice = +productPrice + 100;
+        cart.totalPrice = +productPrice;
         fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
       }
     });
