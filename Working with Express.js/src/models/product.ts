@@ -1,21 +1,14 @@
 import * as path from "path";
 import * as fs from "fs";
+import { IProduct } from "../types/product";
 
-export interface product {
-  title: string;
-  id: string;
-  imageUrl: string;
-  price: number;
-  description: string;
-}
-
-type callBack = (products: product[]) => void;
+type callBack = (products: IProduct[]) => void;
 
 const p = path.join(__dirname, "..", "data", "data.json");
 
 function getAllProductFromFile(cb: callBack) {
   fs.readFile(p, (err, data) => {
-    let products: product[] = [];
+    let products: IProduct[] = [];
     if (!err) {
       products = JSON.parse(data as unknown as string);
     }
@@ -24,7 +17,7 @@ function getAllProductFromFile(cb: callBack) {
   });
 }
 
-export class Product implements product {
+export class Product implements IProduct {
   id: string = "";
   constructor(
     public title: string,
@@ -35,7 +28,7 @@ export class Product implements product {
 
   save(): void {
     this.id = Math.random().toString();
-    getAllProductFromFile((products: product[]) => {
+    getAllProductFromFile((products: IProduct[]) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err) => {});
     });
@@ -45,10 +38,10 @@ export class Product implements product {
     getAllProductFromFile(cb);
   }
 
-  static findById(id: string, cb: (product: product) => void) {
+  static findById(id: string, cb: (product: IProduct) => void) {
     getAllProductFromFile((products) => {
       const product = products.find((p) => p.id === id);
-      cb(product as product);
+      cb(product as IProduct);
     });
   }
 }
