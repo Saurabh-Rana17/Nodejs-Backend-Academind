@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Product } from "../models/product";
+import { Product, product } from "../models/product";
 
 export const getProducts = (req: Request, res: Response) => {
   Product.fetchAll((products) => {
@@ -31,6 +31,8 @@ export const getOrders = (req: Request, res: Response) => {
 
 export const getProduct = (req: Request, res: Response) => {
   const prodId: string = req.params.prodId;
-  console.log(prodId);
+  Product.findById(prodId, (product: product) => {
+    console.log(product);
+  });
   res.redirect("/");
 };

@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 
-interface product {
+export interface product {
   title: string;
   id: string;
   imageUrl: string;
@@ -43,5 +43,12 @@ export class Product implements product {
 
   static fetchAll(cb: callBack) {
     getAllProductFromFile(cb);
+  }
+
+  static findById(id: string, cb: (product: product) => void) {
+    getAllProductFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      cb(product as product);
+    });
   }
 }
