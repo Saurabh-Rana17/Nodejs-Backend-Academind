@@ -24,7 +24,24 @@ export const getIndex = (req: Request, res: Response) => {
 };
 
 export const getCart = (req: Request, res: Response) => {
-  res.render("shop/cart", { pageTitle: "Cart", path: "/cart" });
+  Cart.getProducts((cart) => {
+    Product.fetchAll((products) => {
+      const cartProduct = [];
+      for (let product of products) {
+        if (cart?.products.find((p) => p.id === product.id)) {
+          cartProduct.push({
+            productData: product,
+            qty: cart.products.find((el) => el.id === product.id)?.qty,
+          });
+        }
+      }
+      res.render("shop/cart", {
+        pageTitle: "Cart",
+        path: "/cart",
+        products: cartProduct,
+      });
+    });
+  });
 };
 
 export const postCart = (req: Request, res: Response) => {
@@ -48,5 +65,13 @@ export const getProduct = (req: Request, res: Response) => {
       path: "/products",
       product: product,
     });
+  });
+};
+
+export const postCartDeleteProduct = (req: Request, res: Response) => {
+  const id: string = req.body.id;
+  Product.findById(id, (product) => {
+    Cart.deleteProduct(id, product.price);
+    res.redirect("/cart");
   });
 };

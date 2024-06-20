@@ -48,4 +48,15 @@ export class Cart {
       fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
     });
   }
+
+  static getProducts(cb: (cart: ICart | null) => void) {
+    fs.readFile(p, (err, data) => {
+      const cart: ICart = JSON.parse(data as unknown as string);
+      if (err) {
+        cb(null);
+      } else {
+        cb(cart);
+      }
+    });
+  }
 }
