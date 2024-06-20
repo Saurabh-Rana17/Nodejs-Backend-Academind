@@ -18,19 +18,28 @@ function getAllProductFromFile(cb: callBack) {
 }
 
 export class Product implements IProduct {
-  id: string = "";
+  id: string | null;
   constructor(
+    id: string | null,
     public title: string,
     public imageUrl: string,
     public price: number,
     public description: string
-  ) {}
+  ) {
+    this.id = id;
+  }
 
   save(): void {
-    this.id = Math.random().toString();
     getAllProductFromFile((products: IProduct[]) => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err) => {});
+      if (!this.id) {
+        this.id = Math.random().toString();
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), (err) => {});
+      } else {
+        const existingIndex = products.findIndex((el) => el.id === this.id);
+        products[existingIndex] = this;
+        fs.writeFile(p, JSON.stringify(products), (err) => console.log(err));
+      }
     });
   }
 

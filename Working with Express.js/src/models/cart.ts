@@ -14,12 +14,10 @@ export class Cart {
         const productIndex = cart.products.findIndex((el) => el.id === id);
         let updatedCart = { ...cart };
         if (productIndex < 0) {
-          console.log("does not exist");
           cart.products.push({ id: id, qty: 1 });
           cart.totalPrice += +productPrice;
           fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
         } else {
-          console.log("exist");
           let item = updatedCart.products[productIndex];
           item.qty = item.qty + 1;
           updatedCart.products[productIndex] = item;
