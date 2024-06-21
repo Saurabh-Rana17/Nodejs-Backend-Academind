@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Product } from "../models/product";
 import { IProduct } from "../types/product";
 import { Cart } from "../models/cart";
+import { ObjectId } from "mongodb";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.fetchAll();
@@ -54,17 +55,15 @@ export const getIndex = async (req: Request, res: Response) => {
 //   res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
 // };
 
-// export const getProduct = (req: Request, res: Response) => {
-//   const prodId: string = req.params.prodId;
-//   console.log("ingetprod", prodId);
-//   Product.findById(prodId, (product: IProduct) => {
-//     res.render("shop/product-detail", {
-//       pageTitle: product.title,
-//       path: "/products",
-//       product: product,
-//     });
-//   });
-// };
+export const getProduct = async (req: Request, res: Response) => {
+  const prodId = req.params.prodId;
+  const product = await Product.findById(prodId);
+  res.render("shop/product-detail", {
+    pageTitle: product!.title,
+    path: "/products",
+    product: product,
+  });
+};
 
 // export const postCartDeleteProduct = (req: Request, res: Response) => {
 //   const id: string = req.body.id;
