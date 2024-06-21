@@ -11,9 +11,20 @@ export class Product implements IProduct {
 
   async save() {
     const db = getDb();
+
     try {
       const result = await db.collection("products").insertOne(this);
-      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async fetchAll() {
+    const db = getDb();
+
+    try {
+      const products = await db.collection("products").find().toArray();
+      return products;
     } catch (error) {
       console.log(error);
     }

@@ -5,7 +5,7 @@ import "dotenv/config";
 const app = express();
 
 import adminRoutes from "./routes/admin";
-// import shopRoutes from "./routes/shop";
+import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
 import { mongoConnect } from "./utils/db";
 
@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(notFound);
 
