@@ -84,7 +84,6 @@ class User implements Iuser {
           )?.quantity,
         };
       });
-      console.log(cartObj);
       return cartObj;
     } catch (error) {
       console.log(error);

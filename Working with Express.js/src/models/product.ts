@@ -60,7 +60,6 @@ export class Product {
     const _id = new ObjectId(id);
     try {
       const result = await db.collection("products").deleteOne({ _id });
-      // console.log(result);
     } catch (error) {
       console.log(error);
     }
