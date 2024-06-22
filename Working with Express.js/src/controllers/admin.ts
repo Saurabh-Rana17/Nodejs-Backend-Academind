@@ -25,7 +25,7 @@ export const postAddProduct = async (req: userReq, res: Response) => {
     price,
     description,
     imageUrl,
-    req.user._id
+    req.user?.userId + ""
   );
 
   await product.save();
@@ -57,7 +57,7 @@ export const postEditProduct = async (req: userReq, res: Response) => {
     price,
     description,
     imageUrl,
-    req.user.id,
+    req.user?.userId + "",
     id
   );
   await product.save();

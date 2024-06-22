@@ -1,14 +1,20 @@
 import { ObjectId } from "mongodb";
 import { getDb } from "../utils/db";
-import { Iuser } from "../types/user";
+import { ICart, Iuser } from "../types/user";
+import { IProduct } from "../types/product";
 
 class User implements Iuser {
-  constructor(public name: string, public email: string) {}
+  constructor(
+    public name: string,
+    public email: string,
+    public cart: ICart,
+    public userId: ObjectId
+  ) {}
 
   async save() {
     const db = getDb();
     try {
-      const res = await db.collection("users").insertOne(this);
+      await db.collection("users").insertOne(this);
     } catch (error) {
       console.log(error);
     }
@@ -23,6 +29,25 @@ class User implements Iuser {
       return res;
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async addToCart(product: IProduct) {
+    const cartProduct = this.cart.items.findIndex(
+      (p) => p.productId === product._id
+    );
+    if (cartProduct > -1) {
+    } else {
+      const updatedCart: ICart = {
+        items: [{ productId: new ObjectId(product._id), quantity: 1 }],
+      };
+      const db = getDb();
+      const res = await db
+        .collection("users")
+        .updateOne(
+          { _id: new ObjectId(this.userId) },
+          { $set: { cart: updatedCart } }
+        );
     }
   }
 }

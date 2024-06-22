@@ -3,6 +3,7 @@ import { Product } from "../models/product";
 import { IProduct } from "../types/product";
 import { Cart } from "../models/cart";
 import { ObjectId } from "mongodb";
+import { userReq } from "../types/user";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.fetchAll();
@@ -43,17 +44,18 @@ export const getIndex = async (req: Request, res: Response) => {
 //   });
 // };
 
-// export const postCart = (req: Request, res: Response) => {
-//   const id: string = req.body.productId;
-//   Product.findById(id, (product) => {
-//     Cart.addProduct(id, product.price);
-//   });
-//   res.redirect("/cart");
-// };
+export const postCart = async (req: userReq, res: Response) => {
+  const id: string = req.body.productId;
+  const product = await Product.findById(id);
+  const user = req.user;
+  await user?.addToCart(product as unknown as IProduct);
 
-// export const getOrders = (req: Request, res: Response) => {
-//   res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
-// };
+  res.redirect("/cart");
+};
+
+export const getOrders = (req: Request, res: Response) => {
+  res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
+};
 
 export const getProduct = async (req: Request, res: Response) => {
   const prodId = req.params.prodId;
