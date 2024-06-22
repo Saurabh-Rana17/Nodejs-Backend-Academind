@@ -1,5 +1,5 @@
 import * as path from "path";
-import express from "express";
+import express, { NextFunction, Request } from "express";
 import "dotenv/config";
 
 const app = express();
@@ -8,11 +8,18 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
 import { mongoConnect } from "./utils/db";
+import User from "./models/user";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(async (req: any, res, next: NextFunction) => {
+  const user = await User.findById("6676666069f5a1fbfee4967d");
+  req.user = user;
+  next();
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
