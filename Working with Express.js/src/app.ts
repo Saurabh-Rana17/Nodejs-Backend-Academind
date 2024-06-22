@@ -16,8 +16,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req: userReq, res, next: NextFunction) => {
-  const user = await User.findById("6676666069f5a1fbfee4967d");
-  console.log(user);
+  const user = await User.findById("6676bdad69f5a1fbfee4968a");
   if (user) {
     let newUser = new User(user.name, user.email, user.cart, user._id);
     req.user = newUser;

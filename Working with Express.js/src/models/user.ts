@@ -33,20 +33,33 @@ class User implements Iuser {
   }
 
   async addToCart(product: IProduct) {
-    const cartProduct = this.cart.items.findIndex(
-      (p) => p.productId === product._id
+    const cartProductIndex = this.cart.items.findIndex(
+      (p) => p.productId.toString() === product._id?.toString()
     );
-    if (cartProduct > -1) {
+    const db = getDb();
+    if (cartProductIndex > -1) {
+      const updateQuantity = this.cart.items[cartProductIndex].quantity + 1;
+      this.cart.items[cartProductIndex].quantity = updateQuantity;
+      db.collection("users").updateOne(
+        { _id: new ObjectId(this.userId) },
+        {
+          $set: {
+            cart: this.cart,
+          },
+        }
+      );
     } else {
-      const updatedCart: ICart = {
-        items: [{ productId: new ObjectId(product._id), quantity: 1 }],
-      };
-      const db = getDb();
+      const currCart: ICart = { ...this.cart };
+      currCart.items.push({
+        productId: new ObjectId(product._id),
+        quantity: 1,
+      });
+
       const res = await db
         .collection("users")
         .updateOne(
           { _id: new ObjectId(this.userId) },
-          { $set: { cart: updatedCart } }
+          { $set: { cart: currCart } }
         );
     }
   }
