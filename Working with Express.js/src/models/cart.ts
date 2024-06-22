@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { ICart } from "../types/cart";
+import { ICart } from "../types/user";
 
 const p = path.join(__dirname, "..", "data", "cart.json");
 

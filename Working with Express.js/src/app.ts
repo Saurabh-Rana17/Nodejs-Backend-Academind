@@ -21,7 +21,6 @@ app.use(async (req: userReq, res, next: NextFunction) => {
     let newUser = new User(user.name, user.email, user.cart, user._id);
     req.user = newUser;
   }
-
   next();
 });
 

@@ -17,6 +17,7 @@ export interface Iuser {
   cart: ICart;
   userId: ObjectId;
   addToCart(product: IProduct): Promise<void>;
+  getCart(): any;
 }
 
 export interface userReq extends Request {

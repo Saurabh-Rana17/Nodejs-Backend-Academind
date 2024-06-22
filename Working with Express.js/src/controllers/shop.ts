@@ -23,26 +23,15 @@ export const getIndex = async (req: Request, res: Response) => {
   });
 };
 
-// export const getCart = (req: Request, res: Response) => {
-//   Cart.getProducts((cart) => {
-//     Product.fetchAll((products) => {
-//       const cartProduct = [];
-//       for (let product of products) {
-//         if (cart?.products.find((p) => p.id === product.id)) {
-//           cartProduct.push({
-//             productData: product,
-//             qty: cart.products.find((el) => el.id === product.id)?.qty,
-//           });
-//         }
-//       }
-//       res.render("shop/cart", {
-//         pageTitle: "Cart",
-//         path: "/cart",
-//         products: cartProduct,
-//       });
-//     });
-//   });
-// };
+export const getCart = async (req: userReq, res: Response) => {
+  const cartProduct = await req.user?.getCart();
+  console.log(cartProduct);
+  res.render("shop/cart", {
+    pageTitle: "Cart",
+    path: "/cart",
+    products: cartProduct,
+  });
+};
 
 export const postCart = async (req: userReq, res: Response) => {
   const id: string = req.body.productId;

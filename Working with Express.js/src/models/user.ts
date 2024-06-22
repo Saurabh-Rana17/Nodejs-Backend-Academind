@@ -63,6 +63,33 @@ class User implements Iuser {
         );
     }
   }
+
+  async getCart() {
+    const db = getDb();
+    const productIds = this.cart.items.map((p) => new ObjectId(p.productId));
+    try {
+      const cartData = await db
+        .collection("products")
+        .find({
+          _id: {
+            $in: productIds,
+          },
+        })
+        .toArray();
+      const cartObj = cartData.map((el) => {
+        return {
+          ...el,
+          quantity: this.cart.items.find(
+            (c) => el._id.toString() === c.productId.toString()
+          )?.quantity,
+        };
+      });
+      console.log(cartObj);
+      return cartObj;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default User;
