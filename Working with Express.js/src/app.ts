@@ -9,15 +9,18 @@ import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
 import { mongoConnect } from "./utils/db";
 import User from "./models/user";
-
+import { userReq } from "./types/user";
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(async (req: any, res, next: NextFunction) => {
+app.use(async (req: userReq, res, next: NextFunction) => {
   const user = await User.findById("6676666069f5a1fbfee4967d");
-  req.user = user;
+  if (user) {
+    req.user = user;
+  }
+
   next();
 });
 

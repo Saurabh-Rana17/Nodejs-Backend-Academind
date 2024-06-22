@@ -1,6 +1,7 @@
 import { Request, Response, response } from "express";
 import { Product } from "../models/product";
 import { Cart } from "../models/cart";
+import { userReq } from "../types/user";
 
 interface Body {
   title: string;
@@ -17,9 +18,15 @@ export const getAddproduct = (req: Request, res: Response) => {
   });
 };
 
-export const postAddProduct = async (req: Request, res: Response) => {
+export const postAddProduct = async (req: userReq, res: Response) => {
   const { title, imageUrl, price, description }: Body = req.body;
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    req.user._id
+  );
 
   await product.save();
 
@@ -43,9 +50,16 @@ export const getEditProduct = async (req: Request, res: Response) => {
   });
 };
 
-export const postEditProduct = async (req: Request, res: Response) => {
+export const postEditProduct = async (req: userReq, res: Response) => {
   const { id, title, imageUrl, price, description } = req.body;
-  const product = new Product(title, price, description, imageUrl, id);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    req.user.id,
+    id
+  );
   await product.save();
   res.redirect("/admin/products");
 };

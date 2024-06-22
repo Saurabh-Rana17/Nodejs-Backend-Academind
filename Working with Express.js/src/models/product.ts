@@ -10,6 +10,7 @@ export class Product {
     public price: number,
     public description: string,
     public imageUrl: string,
+    public userId: string,
     id?: string
   ) {
     if (id) {

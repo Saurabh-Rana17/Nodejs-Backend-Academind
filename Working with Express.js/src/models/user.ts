@@ -1,7 +1,8 @@
 import { ObjectId } from "mongodb";
 import { getDb } from "../utils/db";
+import { Iuser } from "../types/user";
 
-class User {
+class User implements Iuser {
   constructor(public name: string, public email: string) {}
 
   async save() {
