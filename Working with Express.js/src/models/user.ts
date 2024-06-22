@@ -89,6 +89,28 @@ class User implements Iuser {
       console.log(error);
     }
   }
+  async deleteItemFromCart(id: string) {
+    const _id = new ObjectId(id);
+    const db = getDb();
+    let updatedCart = { ...this.cart };
+    updatedCart.items = updatedCart.items.filter(
+      (el) => el.productId.toString() !== id
+    );
+    const res = await db.collection("users").updateOne(
+      { _id: this.userId },
+      {
+        $set: {
+          cart: updatedCart,
+        },
+      }
+    );
+
+    try {
+      // const res = await
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default User;

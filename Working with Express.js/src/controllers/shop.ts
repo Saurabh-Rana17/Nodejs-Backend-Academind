@@ -55,10 +55,13 @@ export const getProduct = async (req: Request, res: Response) => {
   });
 };
 
-// export const postCartDeleteProduct = (req: Request, res: Response) => {
-//   const id: string = req.body.id;
-//   Product.findById(id, (product) => {
-//     Cart.deleteProduct(id, product.price);
-//     res.redirect("/cart");
-//   });
-// };
+export const postCartDeleteProduct = async (req: userReq, res: Response) => {
+  const id: string = req.body.productId;
+  console.log(id);
+  await req.user?.deleteItemFromCart(id);
+  res.redirect("/cart");
+  // Product.findById(id, (product) => {
+  //   Cart.deleteProduct(id, product.price);
+  //   res.redirect("/cart");
+  // });
+};
