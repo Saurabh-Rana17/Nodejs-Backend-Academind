@@ -48,31 +48,31 @@ export const getEditProduct = async (req: Request, res: Response) => {
   });
 };
 
-// export const postEditProduct = async (req: userReq, res: Response) => {
-//   const { id, title, imageUrl, price, description } = req.body;
-//   const product = new Product(
-//     title,
-//     price,
-//     description,
-//     imageUrl,
-//     req.user?.userId + "",
-//     id
-//   );
-//   await product.save();
-//   res.redirect("/admin/products");
-// };
+export const postEditProduct = async (req: userReq, res: Response) => {
+  const { id, title, imageUrl, price, description } = req.body;
+  const product = await Product.findByIdAndUpdate(id, req.body);
+  // if (product) {
+  //   product.title = title;
+  //   product.imageUrl = imageUrl;
+  //   product.price = price;
+  //   product.description = description;
+  //   product.save();
+  // }
 
-// export const postDeleteProduct = async (req: Request, res: Response) => {
-//   const id = req.params.id;
-//   await Product.deleteById(id);
-//   res.redirect("/admin/products");
-// };
+  res.redirect("/admin/products");
+};
 
-// export const getAdminProducts = async (req: Request, res: Response) => {
-//   const products = await Product.fetchAll();
-//   res.render("admin/products", {
-//     prods: products,
-//     pageTitle: "Admin Products",
-//     path: "/admin/products",
-//   });
-// };
+export const postDeleteProduct = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  await Product.findByIdAndDelete(id);
+  res.redirect("/admin/products");
+};
+
+export const getAdminProducts = async (req: Request, res: Response) => {
+  const products = await Product.find();
+  res.render("admin/products", {
+    prods: products,
+    pageTitle: "Admin Products",
+    path: "/admin/products",
+  });
+};
