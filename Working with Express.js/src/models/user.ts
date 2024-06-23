@@ -106,7 +106,6 @@ class User implements Iuser {
     );
 
     try {
-      // const res = await
     } catch (error) {
       console.log(error);
     }
@@ -128,6 +127,19 @@ class User implements Iuser {
       const del = await db
         .collection("users")
         .updateOne({ _id: this.userId }, { $set: { cart: { items: [] } } });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOrders() {
+    const db = getDb();
+    try {
+      const res = await db
+        .collection("orders")
+        .find({ "user._id": this.userId })
+        .toArray();
+      return res;
     } catch (error) {
       console.log(error);
     }

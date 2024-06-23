@@ -20,6 +20,7 @@ export interface Iuser {
   getCart(): any;
   deleteItemFromCart(id: string): any;
   addOrder(): any;
+  getOrders(): any;
 }
 
 export interface userReq extends Request {

@@ -1,6 +1,5 @@
 import { Request, Response, response } from "express";
 import { Product } from "../models/product";
-import { Cart } from "../models/cart";
 import { userReq } from "../types/user";
 
 interface Body {

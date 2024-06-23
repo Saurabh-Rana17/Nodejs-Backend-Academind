@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Product } from "../models/product";
 import { IProduct } from "../types/product";
-import { Cart } from "../models/cart";
 import { ObjectId } from "mongodb";
 import { userReq } from "../types/user";
 
@@ -41,8 +40,14 @@ export const postCart = async (req: userReq, res: Response) => {
   res.redirect("/cart");
 };
 
-export const getOrders = (req: Request, res: Response) => {
-  res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
+export const getOrders = async (req: userReq, res: Response) => {
+  const orders = await req.user?.getOrders();
+
+  res.render("shop/orders", {
+    pageTitle: "Your Orders",
+    path: "/orders",
+    orders: orders,
+  });
 };
 
 export const getProduct = async (req: Request, res: Response) => {
@@ -57,7 +62,6 @@ export const getProduct = async (req: Request, res: Response) => {
 
 export const postCartDeleteProduct = async (req: userReq, res: Response) => {
   const id: string = req.body.productId;
-  console.log(id);
   await req.user?.deleteItemFromCart(id);
   res.redirect("/cart");
 };
