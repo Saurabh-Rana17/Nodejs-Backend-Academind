@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { userReq } from "../types/user";
+// import { userReq } from "../types/user";
 import Product from "../models/product";
 
 export const getProducts = async (req: Request, res: Response) => {
@@ -50,15 +50,15 @@ export const getIndex = async (req: Request, res: Response) => {
 //   });
 // };
 
-// export const getProduct = async (req: Request, res: Response) => {
-//   const prodId = req.params.prodId;
-//   const product = await Product.findById(prodId);
-//   res.render("shop/product-detail", {
-//     pageTitle: product!.title,
-//     path: "/products",
-//     product: product,
-//   });
-// };
+export const getProduct = async (req: Request, res: Response) => {
+  const prodId = req.params.prodId;
+  const product = await Product.findById(prodId);
+  res.render("shop/product-detail", {
+    pageTitle: product?.title,
+    path: "/products",
+    product: product,
+  });
+};
 
 // export const postCartDeleteProduct = async (req: userReq, res: Response) => {
 //   const id: string = req.body.productId;
