@@ -60,8 +60,9 @@ export const postCartDeleteProduct = async (req: userReq, res: Response) => {
   console.log(id);
   await req.user?.deleteItemFromCart(id);
   res.redirect("/cart");
-  // Product.findById(id, (product) => {
-  //   Cart.deleteProduct(id, product.price);
-  //   res.redirect("/cart");
-  // });
+};
+
+export const postOrder = async (req: userReq, res: Response) => {
+  await req.user?.addOrder();
+  res.redirect("/orders");
 };

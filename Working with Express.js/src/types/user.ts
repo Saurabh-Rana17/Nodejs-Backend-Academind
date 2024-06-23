@@ -19,6 +19,7 @@ export interface Iuser {
   addToCart(product: IProduct): Promise<void>;
   getCart(): any;
   deleteItemFromCart(id: string): any;
+  addOrder(): any;
 }
 
 export interface userReq extends Request {

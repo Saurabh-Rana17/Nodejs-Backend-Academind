@@ -111,6 +111,27 @@ class User implements Iuser {
       console.log(error);
     }
   }
+
+  async addOrder() {
+    const db = getDb();
+    try {
+      const products = await this.getCart();
+      const object = {
+        items: products,
+        user: {
+          _id: new ObjectId(this.userId),
+          name: this.name,
+        },
+      };
+      const res = await db.collection("orders").insertOne(object);
+      this.cart = { items: [] };
+      const del = await db
+        .collection("users")
+        .updateOne({ _id: this.userId }, { $set: { cart: { items: [] } } });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default User;
