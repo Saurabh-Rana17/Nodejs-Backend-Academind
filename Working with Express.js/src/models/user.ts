@@ -1,19 +1,24 @@
-import { ObjectId, Schema, Document, model } from "mongoose";
+import { ObjectId, Schema, model, Model } from "mongoose";
+import { IProduct } from "./product";
 
 export interface IUser {
   name: string;
   email: string;
   cart: {
-    items: [
-      {
-        productId: ObjectId;
-        quantity: number;
-      }
-    ];
+    items: {
+      productId: ObjectId;
+      quantity: number;
+    }[];
   };
 }
 
-const userSchema = new Schema<IUser>({
+interface IUserMethods {
+  addToCart(): any;
+}
+
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   name: {
     type: String,
     required: true,
@@ -39,5 +44,25 @@ const userSchema = new Schema<IUser>({
   },
 });
 
-const User = model<IUser>("User", userSchema);
+userSchema.method("addToCart", async function (product: IProduct) {
+  const cartProductIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId.toString() === product._id!.toString();
+  });
+  let newQuantity = 1;
+  const updatedCartItem = [...this.cart.items];
+  if (cartProductIndex >= 0) {
+    newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItem[cartProductIndex].quantity = newQuantity;
+  } else {
+    updatedCartItem.push({ productId: product._id!, quantity: newQuantity });
+  }
+  const updatedCart = {
+    items: updatedCartItem,
+  };
+  this.cart = updatedCart;
+  await this.save();
+});
+
+const User = model<IUser, UserModel>("User", userSchema);
+
 export default User;

@@ -5,7 +5,7 @@ import {
   //   getOrders,
   getProduct,
   getProducts,
-  //   postCart,
+  postCart,
   //   postCartDeleteProduct,
   //   postOrder,
 } from "../controllers/shop";
@@ -15,7 +15,7 @@ router.get("/", getIndex);
 router.get("/products", getProducts);
 router.get("/products/:prodId", getProduct);
 // router.get("/cart", getCart);
-// router.post("/cart", postCart);
+router.post("/cart", postCart);
 // router.post("/cart-delete-item", postCartDeleteProduct);
 // router.get("/orders", getOrders);
 // router.post("/create-order", postOrder);

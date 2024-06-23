@@ -23,5 +23,5 @@ import { Document } from "mongoose";
 // }
 
 export interface userReq extends Request {
-  user?: Document;
+  user?: any;
 }

@@ -1,7 +1,7 @@
-import mongoose, { ObjectId, Schema, model } from "mongoose";
-import { IpcNetConnectOpts } from "net";
+import mongoose, { Document, ObjectId, Schema, model } from "mongoose";
 
-export interface IProduct {
+export interface IProduct extends Document {
+  _id: ObjectId;
   title: string;
   price: string;
   description: string;

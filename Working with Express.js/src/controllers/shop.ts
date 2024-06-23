@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 
-// import { userReq } from "../types/user";
+import { userReq } from "../types/user";
 import Product from "../models/product";
+import { IUser } from "../models/user";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
@@ -31,14 +32,14 @@ export const getIndex = async (req: Request, res: Response) => {
 //   });
 // };
 
-// export const postCart = async (req: userReq, res: Response) => {
-//   const id: string = req.body.productId;
-//   const product = await Product.findById(id);
-//   const user = req.user;
-//   await user?.addToCart(product as unknown as IProduct);
+export const postCart = async (req: userReq, res: Response) => {
+  const id: string = req.body.productId;
+  const product = await Product.findById(id);
+  const user = req.user;
+  await user?.addToCart(product);
 
-//   res.redirect("/cart");
-// };
+  res.redirect("/cart");
+};
 
 // export const getOrders = async (req: userReq, res: Response) => {
 //   const orders = await req.user?.getOrders();
