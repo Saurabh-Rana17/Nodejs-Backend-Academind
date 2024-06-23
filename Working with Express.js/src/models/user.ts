@@ -76,6 +76,7 @@ class User implements Iuser {
           },
         })
         .toArray();
+
       const cartObj = cartData.map((el) => {
         return {
           ...el,
