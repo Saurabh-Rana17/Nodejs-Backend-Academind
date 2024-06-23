@@ -1,7 +1,7 @@
-export interface IProduct {
-  title: string;
-  imageUrl: string;
-  price: number;
-  description: string;
-  _id?: string;
-}
+// export interface IProduct {
+//   title: string;
+//   imageUrl: string;
+//   price: number;
+//   description: string;
+//   _id?: string;
+// }

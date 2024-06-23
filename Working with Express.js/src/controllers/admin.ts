@@ -1,6 +1,7 @@
 import { Request, Response, response } from "express";
-import { Product } from "../models/product";
 import { userReq } from "../types/user";
+import Product, { IProduct } from "../models/product";
+import { HydratedDocument } from "mongoose";
 
 interface Body {
   title: string;
@@ -19,14 +20,12 @@ export const getAddproduct = (req: Request, res: Response) => {
 
 export const postAddProduct = async (req: userReq, res: Response) => {
   const { title, imageUrl, price, description }: Body = req.body;
-  const product = new Product(
-    title,
-    price,
+  const product: HydratedDocument<IProduct> = new Product({
+    title: title,
     description,
     imageUrl,
-    req.user?.userId + ""
-  );
-
+    price,
+  });
   await product.save();
 
   res.redirect("/");
@@ -49,31 +48,31 @@ export const getEditProduct = async (req: Request, res: Response) => {
   });
 };
 
-export const postEditProduct = async (req: userReq, res: Response) => {
-  const { id, title, imageUrl, price, description } = req.body;
-  const product = new Product(
-    title,
-    price,
-    description,
-    imageUrl,
-    req.user?.userId + "",
-    id
-  );
-  await product.save();
-  res.redirect("/admin/products");
-};
+// export const postEditProduct = async (req: userReq, res: Response) => {
+//   const { id, title, imageUrl, price, description } = req.body;
+//   const product = new Product(
+//     title,
+//     price,
+//     description,
+//     imageUrl,
+//     req.user?.userId + "",
+//     id
+//   );
+//   await product.save();
+//   res.redirect("/admin/products");
+// };
 
-export const postDeleteProduct = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  await Product.deleteById(id);
-  res.redirect("/admin/products");
-};
+// export const postDeleteProduct = async (req: Request, res: Response) => {
+//   const id = req.params.id;
+//   await Product.deleteById(id);
+//   res.redirect("/admin/products");
+// };
 
-export const getAdminProducts = async (req: Request, res: Response) => {
-  const products = await Product.fetchAll();
-  res.render("admin/products", {
-    prods: products,
-    pageTitle: "Admin Products",
-    path: "/admin/products",
-  });
-};
+// export const getAdminProducts = async (req: Request, res: Response) => {
+//   const products = await Product.fetchAll();
+//   res.render("admin/products", {
+//     prods: products,
+//     pageTitle: "Admin Products",
+//     path: "/admin/products",
+//   });
+// };
