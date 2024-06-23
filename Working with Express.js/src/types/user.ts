@@ -1,28 +1,27 @@
 import { Request } from "express";
-import { IProduct } from "./product";
-import { ObjectId } from "mongodb";
+import { Document } from "mongoose";
 
-export interface ICart {
-  items: cartItem[];
-}
+// export interface ICart {
+//   items: cartItem[];
+// }
 
-interface cartItem {
-  productId: string | ObjectId;
-  quantity: number;
-}
+// interface cartItem {
+//   productId: string | ObjectId;
+//   quantity: number;
+// }
 
-export interface Iuser {
-  name: string;
-  email: string;
-  cart: ICart;
-  userId: ObjectId;
-  addToCart(product: IProduct): Promise<void>;
-  getCart(): any;
-  deleteItemFromCart(id: string): any;
-  addOrder(): any;
-  getOrders(): any;
-}
+// export interface Iuser {
+//   name: string;
+//   email: string;
+//   cart: ICart;
+//   userId: ObjectId;
+//   addToCart(product: IProduct): Promise<void>;
+//   getCart(): any;
+//   deleteItemFromCart(id: string): any;
+//   addOrder(): any;
+//   getOrders(): any;
+// }
 
 export interface userReq extends Request {
-  user?: Iuser;
+  user?: Document;
 }

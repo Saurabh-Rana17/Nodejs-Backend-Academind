@@ -10,20 +10,20 @@ import { notFound } from "./controllers/404";
 // import User from "./models/user";
 import { userReq } from "./types/user";
 import mongoose from "mongoose";
+import User from "./models/user";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(async (req: userReq, res, next: NextFunction) => {
-// const user = await User.findById("6676bdad69f5a1fbfee4968a");
-// if (user) {
-//   let newUser = new User(user.name, user.email, user.cart, user._id);
-//   req.user = newUser;
-// }
-// next();
-// });
+app.use(async (req: userReq, res, next: NextFunction) => {
+  const user = await User.findById("66780e36dbb2c1a52e8cd2d5");
+  if (user) {
+    req.user = user;
+  }
+  next();
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -34,6 +34,17 @@ const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL!);
     console.log("connected to db");
+    const user = await User.findOne();
+    if (!user) {
+      const newUser = new User({
+        name: "saurabh",
+        email: "saurabh@gmail.com",
+        cart: { items: [] },
+      });
+
+      newUser.save();
+    }
+
     app.listen(3000, () => {
       console.log("listening on port 3000");
     });

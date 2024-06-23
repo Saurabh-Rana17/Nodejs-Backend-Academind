@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { ObjectId, Schema, model } from "mongoose";
 import { IpcNetConnectOpts } from "net";
 
 export interface IProduct {
@@ -6,6 +6,7 @@ export interface IProduct {
   price: string;
   description: string;
   imageUrl: string;
+  userid: ObjectId;
 }
 
 const productSchema = new Schema<IProduct>({
@@ -23,6 +24,11 @@ const productSchema = new Schema<IProduct>({
   },
   imageUrl: {
     type: String,
+    required: true,
+  },
+  userid: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });
