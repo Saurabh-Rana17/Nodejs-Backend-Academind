@@ -7,7 +7,7 @@ import {
   getProducts,
   postCart,
   postCartDeleteProduct,
-  //   postOrder,
+  postOrder,
 } from "../controllers/shop";
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.get("/cart", getCart);
 router.post("/cart", postCart);
 router.post("/cart-delete-item", postCartDeleteProduct);
 // router.get("/orders", getOrders);
-// router.post("/create-order", postOrder);
+router.post("/create-order", postOrder);
 // router.get("/checkout");
 
 export default router;

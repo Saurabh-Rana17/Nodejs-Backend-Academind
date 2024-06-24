@@ -74,7 +74,8 @@ export const postCartDeleteProduct = async (req: userReq, res: Response) => {
   res.redirect("/cart");
 };
 
-// export const postOrder = async (req: userReq, res: Response) => {
-//   await req.user?.addOrder();
-//   res.redirect("/orders");
-// };
+export const postOrder = async (req: userReq, res: Response) => {
+  // await req.user?.addOrder();
+
+  res.redirect("/orders");
+};
