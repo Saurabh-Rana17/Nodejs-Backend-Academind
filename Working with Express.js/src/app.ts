@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req: userReq, res, next: NextFunction) => {
-  const user = await User.findById("66780e36dbb2c1a52e8cd2d5");
+  const user = await User.findById("667945078a6d9b03d68182b6");
   if (user) {
     req.user = user;
   }
@@ -33,7 +33,7 @@ app.use(notFound);
 
 const startServer = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL!);
+    await mongoose.connect(process.env.MONGO_LOCAL!);
     console.log("connected to db");
     const user = await User.findOne();
     if (!user) {
@@ -45,7 +45,6 @@ const startServer = async () => {
 
       newUser.save();
     }
-
     app.listen(3000, () => {
       console.log("listening on port 3000");
     });
