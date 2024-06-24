@@ -4,13 +4,13 @@ import "dotenv/config";
 
 const app = express();
 
+import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
-// import User from "./models/user";
 import { userReq } from "./types/user";
 import mongoose from "mongoose";
-import User, { IUser } from "./models/user";
+import User from "./models/user";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -27,6 +27,7 @@ app.use(async (req: userReq, res, next: NextFunction) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(notFound);
 
