@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/connect-mongodb-session": "^2.4.7",
     "@types/ejs": "^3.1.5",
     "@types/express-session": "^1.18.0",
+    "connect-mongodb-session": "^5.0.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",

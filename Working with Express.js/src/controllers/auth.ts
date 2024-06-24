@@ -9,7 +9,7 @@ export const getLogin = (req: Request, res: Response) => {
   res.render("auth/login", {
     path: "login",
     pageTitle: "Login",
-    isLoggedIn: false,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 

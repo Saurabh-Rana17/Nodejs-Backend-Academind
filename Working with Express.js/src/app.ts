@@ -9,16 +9,29 @@ import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
 import mongoose from "mongoose";
 import User from "./models/user";
-import session from "express-session";
+import session, { Store } from "express-session";
 import "./types/express-session";
 import "./types/express";
+import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
+
+const mongoDBStore = ConnectMongoDBSession(session);
+
+const store: MongoDBStore = new mongoDBStore({
+  collection: "sessions",
+  uri: process.env.MONGO_LOCAL!,
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  session({ secret: "my secret key", resave: false, saveUninitialized: false })
+  session({
+    secret: "my secret key",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
 );
 
 app.use(async (req: Request, res, next: NextFunction) => {
