@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 
 import { userReq } from "../types/user";
-import Product from "../models/product";
-import { IUser } from "../models/user";
+import Product, { IProduct } from "../models/product";
+import Order, { IOrder } from "../models/order";
+import { Document, HydratedDocument } from "mongoose";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
@@ -42,15 +43,14 @@ export const postCart = async (req: userReq, res: Response) => {
   res.redirect("/cart");
 };
 
-// export const getOrders = async (req: userReq, res: Response) => {
-//   const orders = await req.user?.getOrders();
-
-//   res.render("shop/orders", {
-//     pageTitle: "Your Orders",
-//     path: "/orders",
-//     orders: orders,
-//   });
-// };
+export const getOrders = async (req: userReq, res: Response) => {
+  const orders = await Order.find().populate("products.product");
+  res.render("shop/orders", {
+    pageTitle: "Your Orders",
+    path: "/orders",
+    orders: orders,
+  });
+};
 
 export const getProduct = async (req: Request, res: Response) => {
   const prodId = req.params.prodId;
@@ -75,7 +75,25 @@ export const postCartDeleteProduct = async (req: userReq, res: Response) => {
 };
 
 export const postOrder = async (req: userReq, res: Response) => {
-  // await req.user?.addOrder();
+  const order: HydratedDocument<IOrder> = new Order();
+  const ans = await req.user.populate("cart.items.productId");
+  const userProducts: { productId: IProduct; quantity: number }[] =
+    ans.cart.items;
+  let orderProduct: { product: IProduct; quantity: number }[] = [];
+  userProducts.forEach((p) => {
+    orderProduct.push({
+      product: {
+        ...p.productId.toJSON(),
+      },
+      quantity: p.quantity,
+    });
+  });
+  order.products = orderProduct;
+  order.user.userId = req.user._id;
+  order.user.name = req.user.name;
+  await order.save();
+  req.user.cart.items = [];
+  await req.user.save();
 
   res.redirect("/orders");
 };
