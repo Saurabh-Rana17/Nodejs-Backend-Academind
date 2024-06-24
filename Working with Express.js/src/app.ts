@@ -10,7 +10,7 @@ import { notFound } from "./controllers/404";
 // import User from "./models/user";
 import { userReq } from "./types/user";
 import mongoose from "mongoose";
-import User from "./models/user";
+import User, { IUser } from "./models/user";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
