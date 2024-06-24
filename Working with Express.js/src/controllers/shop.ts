@@ -44,7 +44,8 @@ export const postCart = async (req: userReq, res: Response) => {
 };
 
 export const getOrders = async (req: userReq, res: Response) => {
-  const orders = await Order.find().populate("products.product");
+  const orders = await Order.find({ "user.userId": req.user._id });
+  // const orders = await Order.find().populate("products.product");
   res.render("shop/orders", {
     pageTitle: "Your Orders",
     path: "/orders",
