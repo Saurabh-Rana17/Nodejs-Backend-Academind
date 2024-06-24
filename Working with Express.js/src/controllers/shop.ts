@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-import { userReq } from "../types/user";
 import Product, { IProduct } from "../models/product";
 import Order, { IOrder } from "../models/order";
 import { Document, HydratedDocument } from "mongoose";
@@ -12,6 +11,7 @@ export const getProducts = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "All Products",
     path: "/products",
+    isLoggedIn: false,
   });
 };
 
@@ -21,20 +21,22 @@ export const getIndex = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "Home",
     path: "/",
+    isLoggedIn: false,
   });
 };
 
-export const getCart = async (req: userReq, res: Response) => {
+export const getCart = async (req: Request, res: Response) => {
   // const cartProduct = await req.user?.getCart();
   const cartProduct = await req.user.populate("cart.items.productId");
   res.render("shop/cart", {
     pageTitle: "Cart",
     path: "/cart",
     products: req.user.cart.items,
+    isLoggedIn: false,
   });
 };
 
-export const postCart = async (req: userReq, res: Response) => {
+export const postCart = async (req: Request, res: Response) => {
   const id: string = req.body.productId;
   const product = await Product.findById(id);
   const user = req.user;
@@ -43,13 +45,14 @@ export const postCart = async (req: userReq, res: Response) => {
   res.redirect("/cart");
 };
 
-export const getOrders = async (req: userReq, res: Response) => {
+export const getOrders = async (req: Request, res: Response) => {
   const orders = await Order.find({ "user.userId": req.user._id });
   // const orders = await Order.find().populate("products.product");
   res.render("shop/orders", {
     pageTitle: "Your Orders",
     path: "/orders",
     orders: orders,
+    isLoggedIn: false,
   });
 };
 
@@ -61,10 +64,11 @@ export const getProduct = async (req: Request, res: Response) => {
     pageTitle: product?.title,
     path: "/products",
     product: product,
+    isLoggedIn: false,
   });
 };
 
-export const postCartDeleteProduct = async (req: userReq, res: Response) => {
+export const postCartDeleteProduct = async (req: Request, res: Response) => {
   const id: string = req.body.productId;
   const updatedCartItem = req.user.cart.items.filter(
     (i: any) => i.productId.toString() !== id.toString()
@@ -75,7 +79,7 @@ export const postCartDeleteProduct = async (req: userReq, res: Response) => {
   res.redirect("/cart");
 };
 
-export const postOrder = async (req: userReq, res: Response) => {
+export const postOrder = async (req: Request, res: Response) => {
   const order: HydratedDocument<IOrder> = new Order();
   const ans = await req.user.populate("cart.items.productId");
   const userProducts: { productId: IProduct; quantity: number }[] =

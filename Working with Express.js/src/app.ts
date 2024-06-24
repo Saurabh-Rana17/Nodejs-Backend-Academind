@@ -1,23 +1,27 @@
 import * as path from "path";
 import express, { NextFunction, Request } from "express";
 import "dotenv/config";
-
 const app = express();
 
 import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
-import { userReq } from "./types/user";
 import mongoose from "mongoose";
 import User from "./models/user";
+import session from "express-session";
+import "./types/express-session";
+import "./types/express";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({ secret: "my secret key", resave: false, saveUninitialized: false })
+);
 
-app.use(async (req: userReq, res, next: NextFunction) => {
+app.use(async (req: Request, res, next: NextFunction) => {
   const user = await User.findById("667945078a6d9b03d68182b6");
   if (user) {
     req.user = user;
