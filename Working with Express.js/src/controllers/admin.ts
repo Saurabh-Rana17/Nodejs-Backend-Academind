@@ -14,7 +14,7 @@ export const getAddproduct = (req: Request, res: Response) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isLoggedIn: false,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
@@ -25,8 +25,8 @@ export const postAddProduct = async (req: Request, res: Response) => {
     description,
     imageUrl,
     price,
-    userid: req.user,
-    isLoggedIn: false,
+    userid: req.session.user,
+    // isLoggedIn: req.session.isLoggedIn,
   });
   await product.save();
 
@@ -47,7 +47,7 @@ export const getEditProduct = async (req: Request, res: Response) => {
     path: "/admin/edit-product",
     editing: editMode,
     product: product,
-    isLoggedIn: false,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
@@ -77,6 +77,6 @@ export const getAdminProducts = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "Admin Products",
     path: "/admin/products",
-    isLoggedIn: false,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };

@@ -34,14 +34,6 @@ app.use(
   })
 );
 
-app.use(async (req: Request, res, next: NextFunction) => {
-  const user = await User.findById("667945078a6d9b03d68182b6");
-  if (user) {
-    req.user = user;
-  }
-  next();
-});
-
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);

@@ -1,19 +1,24 @@
 import { Request, Response } from "express";
-
-// interface req extends Session extends Request  {
-
-// }
+import User from "../models/user";
 
 export const getLogin = (req: Request, res: Response) => {
-  console.log(req.session.isLoggedIn);
   res.render("auth/login", {
-    path: "login",
+    path: "/login",
     pageTitle: "Login",
     isLoggedIn: req.session.isLoggedIn,
   });
 };
 
-export const postLogin = (req: Request, res: Response) => {
+export const postLogin = async (req: Request, res: Response) => {
+  const user = await User.findById("667945078a6d9b03d68182b6");
+  req.session.user = user;
   req.session.isLoggedIn = true;
   res.redirect("/");
+};
+
+export const postLogout = (req: Request, res: Response) => {
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect("/");
+  });
 };
