@@ -10,7 +10,7 @@ export const getProducts = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "All Products",
     path: "/products",
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -20,7 +20,7 @@ export const getIndex = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "Home",
     path: "/",
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -30,7 +30,7 @@ export const getCart = async (req: Request, res: Response) => {
     pageTitle: "Cart",
     path: "/cart",
     products: req.user.cart.items,
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -49,7 +49,7 @@ export const getOrders = async (req: Request, res: Response) => {
     pageTitle: "Your Orders",
     path: "/orders",
     orders: orders,
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -61,7 +61,7 @@ export const getProduct = async (req: Request, res: Response) => {
     pageTitle: product?.title,
     path: "/products",
     product: product,
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 

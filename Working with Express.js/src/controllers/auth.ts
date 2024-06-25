@@ -5,7 +5,7 @@ export const getLogin = (req: Request, res: Response) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isLoggedIn: req.session.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
