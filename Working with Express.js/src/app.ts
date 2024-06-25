@@ -9,7 +9,7 @@ import shopRoutes from "./routes/shop";
 import { notFound } from "./controllers/404";
 import mongoose from "mongoose";
 import User from "./models/user";
-import session, { Store } from "express-session";
+import session from "express-session";
 import "./types/express-session";
 import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
@@ -34,6 +34,14 @@ app.use(
   })
 );
 
+app.use(async (req: Request, res, next) => {
+  if (req.session.user) {
+    const user = await User.findById(req.session.user._id);
+    req.user = user;
+  }
+  next();
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
@@ -57,9 +65,7 @@ const startServer = async () => {
     app.listen(3000, () => {
       console.log("listening on port 3000");
     });
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 startServer();

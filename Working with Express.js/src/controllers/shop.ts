@@ -25,12 +25,11 @@ export const getIndex = async (req: Request, res: Response) => {
 };
 
 export const getCart = async (req: Request, res: Response) => {
-  // const cartProduct = await req.user?.getCart();
-  const cartProduct = await req.session.user.populate("cart.items.productId");
+  const cartProduct = await req.user.populate("cart.items.productId");
   res.render("shop/cart", {
     pageTitle: "Cart",
     path: "/cart",
-    products: req.session.user.cart.items,
+    products: req.user.cart.items,
     isLoggedIn: req.session.isLoggedIn,
   });
 };
@@ -38,9 +37,8 @@ export const getCart = async (req: Request, res: Response) => {
 export const postCart = async (req: Request, res: Response) => {
   const id: string = req.body.productId;
   const product = await Product.findById(id);
-  const user = req.session.user;
-  await user?.addToCart(product);
-
+  const user = req.user;
+  const ans = await user.addToCart(product);
   res.redirect("/cart");
 };
 
@@ -69,18 +67,18 @@ export const getProduct = async (req: Request, res: Response) => {
 
 export const postCartDeleteProduct = async (req: Request, res: Response) => {
   const id: string = req.body.productId;
-  const updatedCartItem = req.session.user.cart.items.filter(
+  const updatedCartItem = req.user.cart.items.filter(
     (i: any) => i.productId.toString() !== id.toString()
   );
-  req.session.user.cart.items = updatedCartItem;
-  await req.session.user.save();
+  req.user.cart.items = updatedCartItem;
+  await req.user.save();
 
   res.redirect("/cart");
 };
 
 export const postOrder = async (req: Request, res: Response) => {
   const order: HydratedDocument<IOrder> = new Order();
-  const ans = await req.session.user.populate("cart.items.productId");
+  const ans = await req.user.populate("cart.items.productId");
   const userProducts: { productId: IProduct; quantity: number }[] =
     ans.cart.items;
   let orderProduct: { product: IProduct; quantity: number }[] = [];
@@ -93,11 +91,11 @@ export const postOrder = async (req: Request, res: Response) => {
     });
   });
   order.products = orderProduct;
-  order.user.userId = req.session.user._id;
-  order.user.name = req.session.user.name;
+  order.user.userId = req.user._id;
+  order.user.name = req.user.name;
   await order.save();
-  req.session.user.cart.items = [];
-  await req.session.user.save();
+  req.user.cart.items = [];
+  await req.user.save();
 
   res.redirect("/orders");
 };

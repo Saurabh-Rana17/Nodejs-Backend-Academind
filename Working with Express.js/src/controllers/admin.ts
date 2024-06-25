@@ -25,7 +25,7 @@ export const postAddProduct = async (req: Request, res: Response) => {
     description,
     imageUrl,
     price,
-    userid: req.session.user,
+    userid: req.user,
     // isLoggedIn: req.session.isLoggedIn,
   });
   await product.save();
