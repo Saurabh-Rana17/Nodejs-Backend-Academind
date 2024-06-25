@@ -8,10 +8,8 @@
 //   }
 //   try {
 //     const client = await MongoClient.connect(process.env.MONGO_URL);
-//     console.log("connected to db");
 //     _db = client.db("shop");
 //   } catch (error) {
-//     console.log(error);
 //     throw new Error("Failed to connect db");
 //   }
 // };

@@ -51,8 +51,9 @@ export const getEditProduct = async (req: Request, res: Response) => {
 };
 
 export const postEditProduct = async (req: Request, res: Response) => {
-  const { id, title, imageUrl, price, description } = req.body;
-  const product = await Product.findByIdAndUpdate(id, req.body);
+  const { productId, title, imageUrl, price, description } = req.body;
+  const product = await Product.findByIdAndUpdate(productId, req.body);
+
   // if (product) {
   //   product.title = title;
   //   product.imageUrl = imageUrl;

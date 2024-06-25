@@ -32,4 +32,17 @@ export const getSignup = (req: Request, res: Response) => {
   });
 };
 
-export const postSignup = () => {};
+export const postSignup = async (req: Request, res: Response) => {
+  const { email, password, confirmPassword } = req.body;
+  const doesExist = await User.findOne({ email: email });
+  if (doesExist) {
+    return res.redirect("/signup");
+  }
+  const user = new User({
+    cart: { items: [] },
+    email: email,
+    password: password,
+  });
+  await user.save();
+  res.redirect("/login");
+};

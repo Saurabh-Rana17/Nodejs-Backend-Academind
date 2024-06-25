@@ -2,7 +2,7 @@ import { ObjectId, Schema, model, Model } from "mongoose";
 import { IProduct } from "./product";
 
 export interface IUser {
-  name: string;
+  password: string;
   email: string;
   cart: {
     items: {
@@ -19,7 +19,7 @@ interface IUserMethods {
 type UserModel = Model<IUser, {}, IUserMethods>;
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-  name: {
+  password: {
     type: String,
     required: true,
   },
