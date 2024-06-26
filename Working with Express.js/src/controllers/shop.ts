@@ -24,11 +24,18 @@ export const getIndex = async (req: Request, res: Response) => {
 };
 
 export const getCart = async (req: Request, res: Response) => {
-  const cartProduct = await req.user.populate("cart.items.productId");
+  const cart = await req.user.populate("cart.items.productId");
+  const cartProduct: any[] = [];
+  cart.cart.items.forEach((i: any) => {
+    if (i.productId) {
+      cartProduct.push(i);
+    }
+  });
+  console.log(cartProduct);
   res.render("shop/cart", {
     pageTitle: "Cart",
     path: "/cart",
-    products: req.user.cart.items,
+    products: cartProduct,
   });
 };
 
