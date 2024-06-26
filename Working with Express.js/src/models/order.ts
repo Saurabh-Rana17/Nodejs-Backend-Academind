@@ -7,7 +7,7 @@ export interface IOrder {
     quantity: number;
   }[];
   user: {
-    name: string;
+    email: string;
     userId: ObjectId;
   };
 }
@@ -26,7 +26,7 @@ const orderSchema = new Schema<IOrder>({
     },
   ],
   user: {
-    name: {
+    email: {
       type: String,
       required: true,
     },

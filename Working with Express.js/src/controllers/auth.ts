@@ -6,6 +6,7 @@ export const getLogin = (req: Request, res: Response) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -13,6 +14,7 @@ export const postLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email });
   if (!user) {
+    req.flash("error", "invalid email or password");
     return res.redirect("/login");
   }
   try {
@@ -24,6 +26,7 @@ export const postLogin = async (req: Request, res: Response) => {
         res.redirect("/");
       });
     }
+
     return res.redirect("/login");
   } catch (error) {
     return res.redirect("/login");

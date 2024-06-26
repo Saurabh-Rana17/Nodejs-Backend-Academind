@@ -42,7 +42,6 @@ export const postCart = async (req: Request, res: Response) => {
 
 export const getOrders = async (req: Request, res: Response) => {
   const orders = await Order.find({ "user.userId": req.session.user._id });
-  // const orders = await Order.find().populate("products.product");
   res.render("shop/orders", {
     pageTitle: "Your Orders",
     path: "/orders",
@@ -88,7 +87,7 @@ export const postOrder = async (req: Request, res: Response) => {
   });
   order.products = orderProduct;
   order.user.userId = req.user._id;
-  order.user.name = req.user.name;
+  order.user.email = req.user.email;
   await order.save();
   req.user.cart.items = [];
   await req.user.save();

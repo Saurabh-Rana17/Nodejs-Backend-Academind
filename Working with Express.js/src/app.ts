@@ -13,7 +13,7 @@ import "./types/express-session";
 import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
 import csrf from "csurf";
-
+import flash from "connect-flash";
 const app = express();
 
 const csrfProtection = csrf();
@@ -38,6 +38,7 @@ app.use(
   })
 );
 app.use(csrfProtection);
+app.use(flash());
 
 app.use(async (req: Request, res, next) => {
   if (req.session.user) {
