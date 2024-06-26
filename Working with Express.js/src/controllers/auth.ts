@@ -1,7 +1,19 @@
 import { Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
-import { error } from "console";
+import nodemailer from "nodemailer";
+import { MailOptions } from "nodemailer/lib/json-transport";
+
+const transport = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SENDER_MAIL,
+    pass: process.env.APP_PASS,
+  },
+});
 
 export const getLogin = (req: Request, res: Response) => {
   let message: string[] | string = req.flash("error");
@@ -76,5 +88,22 @@ export const postSignup = async (req: Request, res: Response) => {
     password: hashedPassword,
   });
   await user.save();
+
+  const mailOptions: MailOptions = {
+    from: {
+      name: "Saurabh Rana",
+      address: process.env.SENDER_MAIL!,
+    },
+    to: email,
+    subject: "sending mail using node mailer",
+    text: "this is a text",
+    html: "<b>This is a Html tag</b>",
+  };
+
   res.redirect("/login");
+  // try {
+  //   const resp = await transport.sendMail(mailOptions);
+  // } catch (error) {
+  //   console.log("email resp", error);
+  // }
 };

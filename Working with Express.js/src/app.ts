@@ -1,7 +1,6 @@
 import * as path from "path";
 import express, { NextFunction, Request } from "express";
 import "dotenv/config";
-
 import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -14,6 +13,7 @@ import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
+
 const app = express();
 
 const csrfProtection = csrf();
