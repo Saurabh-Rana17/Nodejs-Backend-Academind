@@ -14,7 +14,6 @@ export const getAddproduct = (req: Request, res: Response) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -46,7 +45,6 @@ export const getEditProduct = async (req: Request, res: Response) => {
     path: "/admin/edit-product",
     editing: editMode,
     product: product,
-    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -77,6 +75,5 @@ export const getAdminProducts = async (req: Request, res: Response) => {
     prods: products,
     pageTitle: "Admin Products",
     path: "/admin/products",
-    isAuthenticated: req.session.isLoggedIn,
   });
 };

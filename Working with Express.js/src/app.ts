@@ -1,7 +1,6 @@
 import * as path from "path";
 import express, { NextFunction, Request } from "express";
 import "dotenv/config";
-const app = express();
 
 import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
@@ -13,6 +12,11 @@ import session from "express-session";
 import "./types/express-session";
 import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
+import csrf from "csurf";
+
+const app = express();
+
+const csrfProtection = csrf();
 
 const mongoDBStore = ConnectMongoDBSession(session);
 
@@ -33,12 +37,19 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 
 app.use(async (req: Request, res, next) => {
   if (req.session.user) {
     const user = await User.findById(req.session.user._id);
     req.user = user;
   }
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
 
