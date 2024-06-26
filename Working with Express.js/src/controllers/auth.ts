@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user";
+import bcrypt from "bcrypt";
 
 export const getLogin = (req: Request, res: Response) => {
   res.render("auth/login", {
@@ -10,12 +11,24 @@ export const getLogin = (req: Request, res: Response) => {
 };
 
 export const postLogin = async (req: Request, res: Response) => {
-  const user = await User.findById("667945078a6d9b03d68182b6");
-  req.session.user = user;
-  req.session.isLoggedIn = true;
-  req.session.save(() => {
-    res.redirect("/");
-  });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    return res.redirect("/login");
+  }
+  try {
+    const match = await bcrypt.compare(password, user.password);
+    if (match) {
+      req.session.user = user;
+      req.session.isLoggedIn = true;
+      return req.session.save(() => {
+        res.redirect("/");
+      });
+    }
+    return res.redirect("/login");
+  } catch (error) {
+    return res.redirect("/login");
+  }
 };
 
 export const postLogout = (req: Request, res: Response) => {
@@ -38,10 +51,11 @@ export const postSignup = async (req: Request, res: Response) => {
   if (doesExist) {
     return res.redirect("/signup");
   }
+  const hashedPassword = await bcrypt.hash(password, 12);
   const user = new User({
     cart: { items: [] },
     email: email,
-    password: password,
+    password: hashedPassword,
   });
   await user.save();
   res.redirect("/login");
