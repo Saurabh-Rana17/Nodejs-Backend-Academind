@@ -31,7 +31,6 @@ export const getCart = async (req: Request, res: Response) => {
       cartProduct.push(i);
     }
   });
-  console.log(cartProduct);
   res.render("shop/cart", {
     pageTitle: "Cart",
     path: "/cart",
@@ -49,6 +48,7 @@ export const postCart = async (req: Request, res: Response) => {
 
 export const getOrders = async (req: Request, res: Response) => {
   const orders = await Order.find({ "user.userId": req.session.user._id });
+
   res.render("shop/orders", {
     pageTitle: "Your Orders",
     path: "/orders",
@@ -87,7 +87,7 @@ export const postOrder = async (req: Request, res: Response) => {
   userProducts.forEach((p) => {
     orderProduct.push({
       product: {
-        ...p.productId.toJSON(),
+        ...p.productId?.toJSON(),
       },
       quantity: p.quantity,
     });
