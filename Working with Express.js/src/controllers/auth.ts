@@ -1,3 +1,4 @@
+import * as crypto from "crypto";
 import { Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
@@ -97,7 +98,7 @@ export const postSignup = async (req: Request, res: Response) => {
     to: email,
     subject: "sending mail using node mailer",
     text: "this is a text",
-    html: "<b>This is a Html tag</b>",
+    html: "<b>Your new  Account Created</b>",
   };
 
   res.redirect("/login");
@@ -106,4 +107,59 @@ export const postSignup = async (req: Request, res: Response) => {
   // } catch (error) {
   //   console.log("email resp", error);
   // }
+};
+
+export const getReset = (req: Request, res: Response) => {
+  let message: string[] | string = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = "";
+  }
+
+  res.render("auth/reset", {
+    path: "/reset",
+    pageTitle: "Signup",
+    errorMessage: message,
+  });
+};
+
+export const postReset = async (req: Request, res: Response) => {
+  const email = req.body.email;
+  crypto.randomBytes(32, async (error, buffer) => {
+    if (error) {
+      console.log(error);
+      return res.redirect("/reset");
+    }
+    const token = buffer.toString("hex");
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      req.flash("error", "No Account with that email found");
+      return res.redirect("/reset");
+    }
+    const now = new Date();
+    user.resetToken = token;
+    user.resetTokenExpiration = new Date(now.getTime() + 1000 * 60 * 60);
+    await user.save();
+
+    res.redirect("/");
+
+    try {
+      transport.sendMail({
+        from: {
+          name: "Shop Node",
+          address: process.env.SENDER_MAIL!,
+        },
+        to: email,
+        subject: "Password reset",
+        text: "this is a text",
+        html: `
+        <p> You Requested a Password Reset </p>
+        <p> Click this  <a href="http://localhost:3000/reset/${token}"> link </a>  to set a new password </p>
+        `,
+      });
+    } catch (error) {
+      console.log("error");
+    }
+  });
 };

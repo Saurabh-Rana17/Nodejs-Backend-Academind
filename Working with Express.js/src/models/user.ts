@@ -10,6 +10,8 @@ export interface IUser {
       quantity: number;
     }[];
   };
+  resetToken?: string;
+  resetTokenExpiration?: Date;
 }
 
 interface IUserMethods {
@@ -42,6 +44,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
       },
     ],
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
 });
 
 userSchema.method("addToCart", async function (product: IProduct) {
