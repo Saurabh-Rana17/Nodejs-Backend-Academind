@@ -1,10 +1,12 @@
 import { Router } from "express";
 import {
   getLogin,
+  getNewPassword,
   getReset,
   getSignup,
   postLogin,
   postLogout,
+  postNewPassword,
   postReset,
   postSignup,
 } from "../controllers/auth";
@@ -20,5 +22,8 @@ router.post("/signup", postSignup);
 
 router.get("/reset", getReset);
 router.post("/reset", postReset);
+
+router.get("/reset/:token", getNewPassword);
+router.post("/new-password", postNewPassword);
 
 export default router;

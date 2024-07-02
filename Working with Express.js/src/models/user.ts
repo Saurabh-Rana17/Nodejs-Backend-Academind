@@ -10,8 +10,8 @@ export interface IUser {
       quantity: number;
     }[];
   };
-  resetToken?: string;
-  resetTokenExpiration?: Date;
+  resetToken?: string | null;
+  resetTokenExpiration?: Date | null;
 }
 
 interface IUserMethods {
