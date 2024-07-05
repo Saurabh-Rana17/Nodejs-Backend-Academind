@@ -53,7 +53,7 @@ export const postEditProduct = async (req: Request, res: Response) => {
   const product = await Product.findById(productId);
 
   if (product) {
-    if (product.userid !== req.user._id) {
+    if (product.userid.toString() !== req.user._id.toString()) {
       return res.redirect("/");
     }
 

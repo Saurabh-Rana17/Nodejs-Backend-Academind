@@ -1,5 +1,5 @@
 import * as path from "path";
-import express, { NextFunction, Request } from "express";
+import express, { Request } from "express";
 import "dotenv/config";
 import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
@@ -32,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "my secret key",
+
     resave: false,
     saveUninitialized: false,
     store: store,
