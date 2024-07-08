@@ -10,6 +10,7 @@ import {
   postReset,
   postSignup,
 } from "../controllers/auth";
+import { check } from "express-validator";
 
 const router = Router();
 
@@ -18,7 +19,11 @@ router.post("/login", postLogin);
 router.post("/logout", postLogout);
 
 router.get("/signup", getSignup);
-router.post("/signup", postSignup);
+router.post(
+  "/signup",
+  check("email").isEmail().withMessage("invalid email"),
+  postSignup
+);
 
 router.get("/reset", getReset);
 router.post("/reset", postReset);

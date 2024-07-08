@@ -4,6 +4,7 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import { MailOptions } from "nodemailer/lib/json-transport";
+import { validationResult } from "express-validator";
 
 const transport = nodemailer.createTransport({
   service: "gmail",
@@ -76,6 +77,17 @@ export const getSignup = (req: Request, res: Response) => {
 
 export const postSignup = async (req: Request, res: Response) => {
   const { email, password, confirmPassword } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
+
   const doesExist = await User.findOne({ email: email });
   if (doesExist) {
     req.flash("error", "email exist already ");
