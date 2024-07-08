@@ -10,7 +10,7 @@ import {
   postReset,
   postSignup,
 } from "../controllers/auth";
-import { check } from "express-validator";
+import { body, check } from "express-validator";
 
 const router = Router();
 
@@ -21,7 +21,24 @@ router.post("/logout", postLogout);
 router.get("/signup", getSignup);
 router.post(
   "/signup",
-  check("email").isEmail().withMessage("invalid email"),
+  [
+    check("email")
+      .isEmail()
+      .withMessage("invalid email")
+      .custom((value, { req }) => {
+        if (value === "test@test.com") {
+          throw new Error("This is forbidden email");
+        }
+        return true;
+      }),
+    body("password", "invalid password").isLength({ min: 5 }).isAlphanumeric(),
+    body("confirmPassword").custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Password dont match");
+      }
+      return true;
+    }),
+  ],
   postSignup
 );
 
