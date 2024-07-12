@@ -11,6 +11,7 @@ import {
   postSignup,
 } from "../controllers/auth";
 import { body, check } from "express-validator";
+import User from "../models/user";
 
 const router = Router();
 
@@ -25,9 +26,17 @@ router.post(
     check("email")
       .isEmail()
       .withMessage("invalid email")
-      .custom((value, { req }) => {
-        if (value === "test@test.com") {
-          throw new Error("This is forbidden email");
+      .custom(async (value, { req }) => {
+        // if (value === "test@test.com") {
+        //   throw new Error("This is forbidden email");
+        // }
+        // return true;
+
+        const doesExist = await User.findOne({ email: value });
+        if (doesExist) {
+          return Promise.reject(
+            "E-mail already exist please select a different one"
+          );
         }
         return true;
       }),

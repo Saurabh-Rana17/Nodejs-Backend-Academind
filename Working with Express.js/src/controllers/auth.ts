@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import { MailOptions } from "nodemailer/lib/json-transport";
 import { validationResult } from "express-validator";
+import { Console } from "console";
 
 const transport = nodemailer.createTransport({
   service: "gmail",
@@ -72,11 +73,13 @@ export const getSignup = (req: Request, res: Response) => {
     path: "/signup",
     pageTitle: "Signup",
     errorMessage: message,
+    oldInp: { email: "", password: "", confirmPassword: "" },
+    validationErrors: [],
   });
 };
 
 export const postSignup = async (req: Request, res: Response) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password } = req.body;
 
   const errors = validationResult(req);
 
@@ -85,15 +88,15 @@ export const postSignup = async (req: Request, res: Response) => {
       path: "/signup",
       pageTitle: "Signup",
       errorMessage: errors.array()[0].msg,
+      oldInp: {
+        email: email,
+        password: password,
+        confirmPassword: req.body.confirmPassword,
+      },
+      validationErrors: errors.array(),
     });
   }
 
-  const doesExist = await User.findOne({ email: email });
-  if (doesExist) {
-    req.flash("error", "email exist already ");
-    console.log("exist");
-    return res.redirect("/signup");
-  }
   const hashedPassword = await bcrypt.hash(password, 12);
   const user = new User({
     cart: { items: [] },
@@ -114,11 +117,11 @@ export const postSignup = async (req: Request, res: Response) => {
   };
 
   res.redirect("/login");
-  // try {
-  //   const resp = await transport.sendMail(mailOptions);
-  // } catch (error) {
-  //   console.log("email resp", error);
-  // }
+  try {
+    const resp = await transport.sendMail(mailOptions);
+  } catch (error) {
+    console.log("email resp", error);
+  }
 };
 
 export const getReset = (req: Request, res: Response) => {
