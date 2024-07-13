@@ -17,6 +17,7 @@ export const getAddproduct = (req: Request, res: Response) => {
     editing: false,
     hasError: false,
     errorMessage: "",
+    validationErrors: [],
   });
 };
 
@@ -31,6 +32,7 @@ export const postAddProduct = async (req: Request, res: Response) => {
       hasError: true,
       errorMessage: errors.array()[0].msg,
       product: { title, imageUrl, price, description },
+      validationErrors: errors.array(),
     });
   }
   const product: HydratedDocument<IProduct> = new Product({
@@ -61,18 +63,33 @@ export const getEditProduct = async (req: Request, res: Response) => {
     product: product,
     hasError: false,
     errorMessage: "",
+    validationErrors: [],
   });
 };
 
 export const postEditProduct = async (req: Request, res: Response) => {
   const { productId, title, imageUrl, price, description } = req.body;
+  console.log("post edit productid", productId);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: true,
+      hasError: true,
+      errorMessage: errors.array()[0].msg,
+      product: { title, imageUrl, price, description, _id: productId },
+      validationErrors: errors.array(),
+    });
+  }
+
   const product = await Product.findById(productId);
 
   if (product) {
     if (product.userid.toString() !== req.user._id.toString()) {
       return res.redirect("/");
     }
-
+    console.log("product", product);
     product.title = title;
     product.imageUrl = imageUrl;
     product.price = price;

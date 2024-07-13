@@ -29,7 +29,7 @@ router.post(
     body("description")
       .notEmpty()
       .withMessage("Please fill all fields")
-      .isLength({ min: 3, max: 400 })
+      .isLength({ min: 8, max: 400 })
       .trim(),
   ],
   postAddProduct
@@ -42,8 +42,8 @@ router.post(
     body("title")
       .notEmpty()
       .withMessage("Please fill all fields")
-      .isAlphanumeric()
-      .withMessage("Please enter aplhanumeric value")
+      .isString()
+      .withMessage("Please enter valid value")
       .isLength({ min: 3 })
       .trim(),
     body("imageUrl").notEmpty().withMessage("Please fill all fields").isURL(),
