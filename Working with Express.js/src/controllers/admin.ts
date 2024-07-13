@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
-import { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 import { validationResult } from "express-validator";
+import { log } from "console";
 
 interface Body {
   title: string;
@@ -21,7 +22,11 @@ export const getAddproduct = (req: Request, res: Response) => {
   });
 };
 
-export const postAddProduct = async (req: Request, res: Response) => {
+export const postAddProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { title, imageUrl, price, description }: Body = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -36,35 +41,59 @@ export const postAddProduct = async (req: Request, res: Response) => {
     });
   }
   const product: HydratedDocument<IProduct> = new Product({
+    _id: new mongoose.Types.ObjectId("6692cce0836c6bae8a888175"),
     title: title,
     description,
     imageUrl,
     price,
     userid: req.user,
   });
-  await product.save();
-
-  res.redirect("/");
+  try {
+    await product.save();
+  } catch (err: any) {
+    console.log("something went wrong");
+    console.log(err);
+    // return res.status(500).render("admin/edit-product", {
+    //   pageTitle: "Add Product",
+    //   path: "/admin/add-product",
+    //   editing: false,
+    //   hasError: true,
+    //   errorMessage: "database operation failed please try again later ",
+    //   product: { title, imageUrl, price, description },
+    //   validationErrors: [],
+    // });
+    // res.redirect("/500");
+    const error: any = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
 
-export const getEditProduct = async (req: Request, res: Response) => {
+export const getEditProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const id = req.params.id;
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect("/");
   }
-
-  const product = await Product.findById(id);
-
-  res.render("admin/edit-product", {
-    pageTitle: "Edit Product",
-    path: "/admin/edit-product",
-    editing: editMode,
-    product: product,
-    hasError: false,
-    errorMessage: "",
-    validationErrors: [],
-  });
+  try {
+    const product = await Product.findById(id);
+    res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: editMode,
+      product: product,
+      hasError: false,
+      errorMessage: "",
+      validationErrors: [],
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    return next(error);
+  }
 };
 
 export const postEditProduct = async (req: Request, res: Response) => {
@@ -74,7 +103,7 @@ export const postEditProduct = async (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Add Product",
-      path: "/admin/add-product",
+      path: "/admin/edit-product",
       editing: true,
       hasError: true,
       errorMessage: errors.array()[0].msg,

@@ -1,10 +1,15 @@
 import * as path from "path";
-import express, { Request } from "express";
+import express, {
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  Response,
+} from "express";
 import "dotenv/config";
 import authRoutes from "./routes/auth";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
-import { notFound } from "./controllers/404";
+import { get500, notFound } from "./controllers/404";
 import mongoose from "mongoose";
 import User from "./models/user";
 import session from "express-session";
@@ -45,9 +50,15 @@ app.use(async (req: Request, res, next) => {
   if (!req.session.user) {
     return next();
   }
-  const user = await User.findById(req.session.user._id);
-  req.user = user;
-  next();
+  try {
+    const user = await User.findById(req.session.user._id);
+    if (user) {
+      req.user = user;
+    }
+    next();
+  } catch (error: any) {
+    throw new Error(error);
+  }
 });
 
 app.use((req, res, next) => {
@@ -60,7 +71,19 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get("/500", get500);
 app.use(notFound);
+
+app.use(
+  (
+    error: ErrorRequestHandler,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    res.redirect("/500");
+  }
+);
 
 const startServer = async () => {
   try {
