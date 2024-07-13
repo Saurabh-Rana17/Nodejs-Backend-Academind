@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
@@ -122,7 +122,11 @@ export const getSignup = (req: Request, res: Response) => {
   });
 };
 
-export const postSignup = async (req: Request, res: Response) => {
+export const postSignup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
 
   const errors = validationResult(req);
@@ -163,8 +167,10 @@ export const postSignup = async (req: Request, res: Response) => {
   res.redirect("/login");
   try {
     const resp = await transport.sendMail(mailOptions);
-  } catch (error) {
-    console.log("email resp", error);
+  } catch (err: any) {
+    const error: any = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };
 
@@ -183,7 +189,11 @@ export const getReset = (req: Request, res: Response) => {
   });
 };
 
-export const postReset = async (req: Request, res: Response) => {
+export const postReset = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const email = req.body.email;
   crypto.randomBytes(32, async (error, buffer) => {
     if (error) {
@@ -217,8 +227,10 @@ export const postReset = async (req: Request, res: Response) => {
         <p> Click this  <a href="http://localhost:3000/reset/${token}"> link </a>  to set a new password </p>
         `,
       });
-    } catch (error) {
-      console.log("error");
+    } catch (err: any) {
+      const error: any = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     }
   });
 };
@@ -245,7 +257,11 @@ export const getNewPassword = async (req: Request, res: Response) => {
   });
 };
 
-export const postNewPassword = async (req: Request, res: Response) => {
+export const postNewPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userId, password: newPassword, passwordToken } = req.body;
   try {
     const user = await User.findOne({
@@ -264,7 +280,9 @@ export const postNewPassword = async (req: Request, res: Response) => {
 
       return res.redirect("/login");
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    const error: any = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };

@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
 import mongoose, { HydratedDocument } from "mongoose";
 import { validationResult } from "express-validator";
-import { log } from "console";
 
 interface Body {
   title: string;
@@ -41,7 +40,6 @@ export const postAddProduct = async (
     });
   }
   const product: HydratedDocument<IProduct> = new Product({
-    _id: new mongoose.Types.ObjectId("6692cce0836c6bae8a888175"),
     title: title,
     description,
     imageUrl,
@@ -50,19 +48,8 @@ export const postAddProduct = async (
   });
   try {
     await product.save();
+    return res.redirect("/");
   } catch (err: any) {
-    console.log("something went wrong");
-    console.log(err);
-    // return res.status(500).render("admin/edit-product", {
-    //   pageTitle: "Add Product",
-    //   path: "/admin/add-product",
-    //   editing: false,
-    //   hasError: true,
-    //   errorMessage: "database operation failed please try again later ",
-    //   product: { title, imageUrl, price, description },
-    //   validationErrors: [],
-    // });
-    // res.redirect("/500");
     const error: any = new Error(err);
     error.httpStatusCode = 500;
     return next(error);
@@ -90,8 +77,9 @@ export const getEditProduct = async (
       errorMessage: "",
       validationErrors: [],
     });
-  } catch (error: any) {
-    console.log(error.message);
+  } catch (err: any) {
+    const error: any = new Error(err);
+    error.httpStatusCode = 500;
     return next(error);
   }
 };
