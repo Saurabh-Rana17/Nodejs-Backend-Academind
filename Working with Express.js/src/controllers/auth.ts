@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import { MailOptions } from "nodemailer/lib/json-transport";
 import { validationResult } from "express-validator";
-import { Console } from "console";
 
 const transport = nodemailer.createTransport({
   service: "gmail",
@@ -30,15 +29,43 @@ export const getLogin = (req: Request, res: Response) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
+    oldInp: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
 export const postLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: errors.array()[0].msg,
+      oldInp: {
+        email: email,
+        password: password,
+      },
+      validationErrors: errors.array(),
+    });
+  }
+
   const user = await User.findOne({ email: email });
   if (!user) {
-    req.flash("error", "invalid email or password");
-    return res.redirect("/login");
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: "error invalid email or password",
+      oldInp: {
+        email: email,
+        password: password,
+      },
+      validationErrors: [],
+    });
   }
   try {
     const match = await bcrypt.compare(password, user.password);
@@ -49,10 +76,27 @@ export const postLogin = async (req: Request, res: Response) => {
         res.redirect("/");
       });
     }
-    req.flash("error", "invalid email or password");
-    return res.redirect("/login");
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: "error invalid email or password",
+      oldInp: {
+        email: email,
+        password: password,
+      },
+      validationErrors: [],
+    });
   } catch (error) {
-    return res.redirect("/login");
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: "error invalid email or password",
+      oldInp: {
+        email: email,
+        password: password,
+      },
+      validationErrors: [],
+    });
   }
 };
 

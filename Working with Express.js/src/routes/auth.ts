@@ -16,10 +16,25 @@ import User from "../models/user";
 const router = Router();
 
 router.get("/login", getLogin);
-router.post("/login", postLogin);
+router.post(
+  "/login",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("invalid email ,please enter valid email")
+      .normalizeEmail(),
+    body("password")
+      .isLength({ min: 5 })
+      .withMessage("invalid password")
+      .isAlphanumeric()
+      .trim(),
+  ],
+  postLogin
+);
 router.post("/logout", postLogout);
 
 router.get("/signup", getSignup);
+
 router.post(
   "/signup",
   [
@@ -34,13 +49,15 @@ router.post(
 
         const doesExist = await User.findOne({ email: value });
         if (doesExist) {
-          return Promise.reject(
-            "E-mail already exist please select a different one"
-          );
+          throw new Error("E-mail already exist please select a different one");
         }
         return true;
-      }),
-    body("password", "invalid password").isLength({ min: 5 }).isAlphanumeric(),
+      })
+      .normalizeEmail(),
+    body("password", "invalid password")
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      .trim(),
     body("confirmPassword").custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error("Password dont match");

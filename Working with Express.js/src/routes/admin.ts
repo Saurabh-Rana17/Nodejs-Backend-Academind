@@ -8,11 +8,12 @@ import {
   postEditProduct,
 } from "../controllers/admin";
 import isAuth from "../middlewares/is-auth";
+import { body } from "express-validator";
 
 const router = express.Router();
 
 router.get("/add-product", isAuth, getAddproduct);
-router.post("/add-product", isAuth, postAddProduct);
+router.post("/add-product", isAuth, [body("")], postAddProduct);
 router.get("/edit-product/:id", isAuth, getEditProduct);
 router.post("/edit-product", isAuth, postEditProduct);
 router.post("/delete-product/:id", isAuth, postDeleteProduct);
