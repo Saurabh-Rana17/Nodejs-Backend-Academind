@@ -29,6 +29,7 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "my secret key",
@@ -41,10 +42,11 @@ app.use(csrfProtection);
 app.use(flash());
 
 app.use(async (req: Request, res, next) => {
-  if (req.session.user) {
-    const user = await User.findById(req.session.user._id);
-    req.user = user;
+  if (!req.session.user) {
+    return next();
   }
+  const user = await User.findById(req.session.user._id);
+  req.user = user;
   next();
 });
 
@@ -64,16 +66,16 @@ const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_LOCAL!);
     console.log("connected to db");
-    const user = await User.findOne();
-    if (!user) {
-      const newUser = new User({
-        name: "saurabh",
-        email: "saurabh@gmail.com",
-        cart: { items: [] },
-      });
+    // const user = await User.findOne();
+    // if (!user) {
+    //   const newUser = new User({
+    //     name: "saurabh",
+    //     email: "saurabh@gmail.com",
+    //     cart: { items: [] },
+    //   });
 
-      newUser.save();
-    }
+    //   newUser.save();
+    // }
     app.listen(3000, () => {
       console.log("listening on port 3000");
     });
