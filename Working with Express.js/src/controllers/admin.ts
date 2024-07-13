@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
 import { HydratedDocument } from "mongoose";
+import { validationResult } from "express-validator";
 
 interface Body {
   title: string;
@@ -14,11 +15,24 @@ export const getAddproduct = (req: Request, res: Response) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    hasError: false,
+    errorMessage: "",
   });
 };
 
 export const postAddProduct = async (req: Request, res: Response) => {
   const { title, imageUrl, price, description }: Body = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      errorMessage: errors.array()[0].msg,
+      product: { title, imageUrl, price, description },
+    });
+  }
   const product: HydratedDocument<IProduct> = new Product({
     title: title,
     description,
@@ -45,6 +59,8 @@ export const getEditProduct = async (req: Request, res: Response) => {
     path: "/admin/edit-product",
     editing: editMode,
     product: product,
+    hasError: false,
+    errorMessage: "",
   });
 };
 
