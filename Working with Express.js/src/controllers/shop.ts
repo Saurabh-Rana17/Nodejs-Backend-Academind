@@ -48,11 +48,17 @@ export const postCart = async (req: Request, res: Response) => {
 
 export const getOrders = async (req: Request, res: Response) => {
   const orders = await Order.find({ "user.userId": req.session.user._id });
+  const correctOrders = orders.map((el) => {
+    const newEl = el;
+    const correctProductList = el.products.filter((p) => p.product);
+    newEl.products = correctProductList;
+    return newEl;
+  });
 
   res.render("shop/orders", {
     pageTitle: "Your Orders",
     path: "/orders",
-    orders: orders,
+    orders: correctOrders,
   });
 };
 
