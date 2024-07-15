@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
 import mongoose, { HydratedDocument } from "mongoose";
 import { validationResult } from "express-validator";
+import { deleteFile } from "../utils/filehelper";
 interface Body {
   title: string;
   imageUrl: string;
@@ -102,8 +103,6 @@ export const getEditProduct = async (
 export const postEditProduct = async (req: Request, res: Response) => {
   const { productId, title, price, description } = req.body;
   const image = req.file;
-  if (!image) {
-  }
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -126,6 +125,7 @@ export const postEditProduct = async (req: Request, res: Response) => {
     }
     product.title = title;
     if (image) {
+      deleteFile(product.imageUrl);
       product.imageUrl = image.path;
     }
     product.price = price;
@@ -136,10 +136,25 @@ export const postEditProduct = async (req: Request, res: Response) => {
   res.redirect("/admin/products");
 };
 
-export const postDeleteProduct = async (req: Request, res: Response) => {
+export const postDeleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const id = req.params.id;
-  await Product.deleteOne({ _id: id, userid: req.user._id });
-  res.redirect("/admin/products");
+  Product.findById(id)
+    .then((product): any => {
+      if (!product) {
+        return next(new Error("product not found"));
+      }
+      deleteFile(product.imageUrl);
+      return Product.deleteOne({ _id: id, userid: req.user._id });
+    })
+    .then(() => {
+      console.log("deleted product");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => next(err));
 };
 
 export const getAdminProducts = async (req: Request, res: Response) => {
