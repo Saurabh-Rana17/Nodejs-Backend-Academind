@@ -4,6 +4,7 @@ import Order, { IOrder } from "../models/order";
 import { HydratedDocument } from "mongoose";
 import * as fs from "fs";
 import * as path from "path";
+import PDFDocument from "pdfkit";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
@@ -126,12 +127,29 @@ export const getInvoices = (
     }
     const invoiceName = "invoice-" + orderId + ".pdf";
     const invoicePath = path.join("data", "invoices", invoiceName);
-    fs.readFile(invoicePath, (err, data) => {
-      if (err) {
-        return next(err);
-      }
-      res.setHeader("Content-Type", "application/pdf");
-      res.send(data);
+    const pdfDoc = new PDFDocument();
+    pdfDoc.pipe(fs.createWriteStream(invoicePath));
+    pdfDoc.pipe(res);
+
+    pdfDoc.fontSize(26).text("Invoice", { underline: true });
+    pdfDoc.text("-------------------------------------");
+    let totalPrice = 0;
+    order.products.forEach((prod) => {
+      totalPrice = totalPrice + prod.quantity * Number(prod.product.price);
+      pdfDoc
+        .fontSize(14)
+        .text(
+          prod.product.title +
+            " - " +
+            prod.quantity +
+            " x " +
+            " $ " +
+            prod.product.price
+        );
     });
+    pdfDoc.text("--------------");
+    pdfDoc.fontSize(20).text("Total Price: $" + totalPrice);
+    pdfDoc.end();
+    res.setHeader("Content-Type", "application/pdf");
   });
 };
