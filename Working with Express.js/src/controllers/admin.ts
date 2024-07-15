@@ -26,9 +26,21 @@ export const postAddProduct = async (
   next: NextFunction
 ) => {
   const { title, price, description }: Body = req.body;
-  const imageUrl = req.file;
-  console.log(imageUrl);
+  const image = req.file;
   const errors = validationResult(req);
+
+  if (!image) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      errorMessage: "Attach file is not a image",
+      product: { title, price, description },
+      validationErrors: [],
+    });
+  }
+
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Add Product",
@@ -36,10 +48,12 @@ export const postAddProduct = async (
       editing: false,
       hasError: true,
       errorMessage: errors.array()[0].msg,
-      product: { title, imageUrl, price, description },
+      product: { title, price, description },
       validationErrors: errors.array(),
     });
   }
+
+  const imageUrl = image.path;
   const product: HydratedDocument<IProduct> = new Product({
     title: title,
     description,

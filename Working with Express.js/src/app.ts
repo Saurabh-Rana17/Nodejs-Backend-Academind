@@ -1,6 +1,7 @@
 import * as path from "path";
 import express, {
   ErrorRequestHandler,
+  Express,
   NextFunction,
   Request,
   Response,
@@ -18,20 +19,11 @@ import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
-import multer from "multer";
+import multer, { Field, FileFilterCallback } from "multer";
 
 const app = express();
 
 const csrfProtection = csrf();
-// const fileStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "images");
-//   },
-//   filename: (req, file, cb) => {
-//     console.log("in fname", file.originalname);
-//     cb(null, file.originalname);
-//   },
-// });
 
 const fileStorage = multer.diskStorage({
   destination: "images/",
@@ -42,6 +34,22 @@ const fileStorage = multer.diskStorage({
     );
   },
 });
+
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 const mongoDBStore = ConnectMongoDBSession(session);
 
@@ -54,7 +62,9 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
-app.use(multer({ storage: fileStorage }).single("image"));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 
 app.use(
   session({
