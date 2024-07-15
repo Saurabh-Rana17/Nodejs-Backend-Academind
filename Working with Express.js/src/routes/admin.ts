@@ -45,7 +45,6 @@ router.post(
       .withMessage("Please enter valid value")
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl").notEmpty().withMessage("Please fill all fields").isURL(),
     body("price").notEmpty().withMessage("Please fill all fields").isFloat(),
     body("description")
       .notEmpty()
