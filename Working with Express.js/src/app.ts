@@ -18,10 +18,30 @@ import "./types/express";
 import ConnectMongoDBSession, { MongoDBStore } from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
+import multer from "multer";
 
 const app = express();
 
 const csrfProtection = csrf();
+// const fileStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "images");
+//   },
+//   filename: (req, file, cb) => {
+//     console.log("in fname", file.originalname);
+//     cb(null, file.originalname);
+//   },
+// });
+
+const fileStorage = multer.diskStorage({
+  destination: "images/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 const mongoDBStore = ConnectMongoDBSession(session);
 
@@ -34,6 +54,7 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(multer({ storage: fileStorage }).single("image"));
 
 app.use(
   session({

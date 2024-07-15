@@ -6,7 +6,7 @@ export default function isAuth(
   next: NextFunction
 ) {
   if (!req.session.isLoggedIn) {
-    return res.redirect("/");
+    return res.status(401).redirect("/");
   }
   next();
 }

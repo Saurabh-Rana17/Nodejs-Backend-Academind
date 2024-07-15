@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
 import mongoose, { HydratedDocument } from "mongoose";
 import { validationResult } from "express-validator";
-
 interface Body {
   title: string;
   imageUrl: string;
@@ -26,7 +25,9 @@ export const postAddProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, imageUrl, price, description }: Body = req.body;
+  const { title, price, description }: Body = req.body;
+  const imageUrl = req.file;
+  console.log(imageUrl);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
