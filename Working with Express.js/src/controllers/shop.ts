@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Product, { IProduct } from "../models/product";
 import Order, { IOrder } from "../models/order";
 import { HydratedDocument } from "mongoose";
+import * as fs from "fs";
+import * as path from "path";
 
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
@@ -106,4 +108,30 @@ export const postOrder = async (req: Request, res: Response) => {
   await req.user.save();
 
   res.redirect("/orders");
+};
+
+export const getInvoices = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.orderId;
+
+  Order.findById(orderId).then((order) => {
+    if (!order) {
+      return next(new Error("No order found"));
+    }
+    if (order.user.userId.toString() !== req.user._id.toString()) {
+      return next(new Error("Unauthorized"));
+    }
+    const invoiceName = "invoice-" + orderId + ".pdf";
+    const invoicePath = path.join("data", "invoices", invoiceName);
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.send(data);
+    });
+  });
 };
