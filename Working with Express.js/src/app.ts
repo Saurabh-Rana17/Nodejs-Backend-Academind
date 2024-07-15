@@ -61,6 +61,8 @@ const store: MongoDBStore = new mongoDBStore({
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "..", "public")));
+app.use("/images", express.static(path.join(__dirname, "..", "images")));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
