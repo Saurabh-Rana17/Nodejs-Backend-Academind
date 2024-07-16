@@ -6,6 +6,8 @@ import * as fs from "fs";
 import * as path from "path";
 import PDFDocument from "pdfkit";
 
+const ITEM_PER_PAGE = 3;
+
 export const getProducts = async (req: Request, res: Response) => {
   const products = await Product.find();
 
@@ -17,12 +19,23 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const getIndex = async (req: Request, res: Response) => {
-  const products = await Product.find();
+  const page = Number(req.query.page);
+  const totalItems = await Product.find().countDocuments();
+
+  const products = await Product.find()
+    .skip((Number(page) - 1) * ITEM_PER_PAGE)
+    .limit(ITEM_PER_PAGE);
   res.render("shop/index", {
     prods: products,
     pageTitle: "Home",
     path: "/",
     csrfToken: req.csrfToken(),
+    totalProducts: totalItems,
+    lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+    hasNextPage: ITEM_PER_PAGE * page < totalItems,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
   });
 };
 
