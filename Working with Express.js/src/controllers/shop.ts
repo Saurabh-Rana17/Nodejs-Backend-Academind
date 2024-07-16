@@ -9,12 +9,22 @@ import PDFDocument from "pdfkit";
 const ITEM_PER_PAGE = 1;
 
 export const getProducts = async (req: Request, res: Response) => {
-  const products = await Product.find();
-
-  res.render("shop/product-list", {
+  const page = Number(req.query.page) || 1;
+  const totalItems = await Product.find().countDocuments();
+  const products = await Product.find()
+    .skip((Number(page) - 1) * ITEM_PER_PAGE)
+    .limit(ITEM_PER_PAGE);
+  res.render("shop/index", {
     prods: products,
-    pageTitle: "All Products",
+    pageTitle: "Home",
     path: "/products",
+    csrfToken: req.csrfToken(),
+    currentPage: page,
+    lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+    hasNextPage: ITEM_PER_PAGE * page < totalItems,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
   });
 };
 
