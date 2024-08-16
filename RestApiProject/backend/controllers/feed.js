@@ -1,21 +1,16 @@
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 
-exports.getPosts = (req, res, next) => {
-  res.status(200).json({
-    posts: [
-      {
-        _id: "9878",
-        title: "First Post",
-        content: "This is the first post!",
-        imageUrl: "images/img1.jpg",
-        creator: {
-          name: "test user",
-        },
-        createdAt: new Date(),
-      },
-    ],
-  });
+exports.getPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find();
+
+    return res.status(200).json({
+      posts,
+    });
+  } catch (error) {
+    next(new Error(error).message);
+  }
 };
 
 exports.createPost = async (req, res, next) => {
