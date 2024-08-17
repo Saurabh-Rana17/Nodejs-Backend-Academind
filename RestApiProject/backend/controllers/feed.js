@@ -121,7 +121,6 @@ exports.updatePost = async (req, res, next) => {
 };
 
 exports.deletePost = async (req, res, next) => {
-  console.log("delete route reached");
   const postId = req.params.postId;
   try {
     const post = await Post.findById(postId);
