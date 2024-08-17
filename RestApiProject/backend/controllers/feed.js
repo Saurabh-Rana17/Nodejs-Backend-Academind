@@ -119,3 +119,26 @@ exports.updatePost = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.deletePost = async (req, res, next) => {
+  console.log("delete route reached");
+  const postId = req.params.postId;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      const err = new Error("post does not exist");
+      err.statusCode = 404;
+      return next(err);
+    }
+    clearFile(post.imageUrl);
+    const result = await Post.findByIdAndDelete(postId);
+    return res
+      .status(200)
+      .json({ message: "post deleted successfully", result });
+  } catch (err) {
+    if (err.statusCode) {
+      err.statusCode = 500;
+    }
+    return next(err);
+  }
+};
