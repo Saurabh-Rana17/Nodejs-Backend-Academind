@@ -76,9 +76,7 @@ class Feed extends Component {
         }
         return res.json();
       })
-      .then((resData) => {
-        console.log(resData);
-      })
+      .then((resData) => {})
       .catch(this.catchError);
   };
 
@@ -106,21 +104,21 @@ class Feed extends Component {
       editLoading: true,
     });
     // Set up data (with image!)
-    let url = "URL";
+
+    const formData = new FormData();
+    formData.append("title", postData.title);
+    formData.append("content", postData.content);
+    formData.append("image", postData.image);
+
+    let url = "http://localhost:8080/feed/post";
     let method = "POST";
     if (this.state.editPost) {
       url = "URL";
     }
 
-    fetch("http://localhost:8080/feed/post", {
+    fetch(url, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: postData.title,
-        content: postData.content,
-      }),
+      body: formData,
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
@@ -155,7 +153,6 @@ class Feed extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
         this.setState({
           isEditing: false,
           editPost: null,
@@ -186,7 +183,6 @@ class Feed extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
         this.setState({ postsLoading: false });
       });
   };

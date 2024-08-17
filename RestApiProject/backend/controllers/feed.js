@@ -25,12 +25,17 @@ exports.createPost = async (req, res, next) => {
   }
   const title = req.body.title;
   const content = req.body.content;
+  if (!req.file) {
+    const error = new Error("no image provided");
+    error.statusCode = 422;
+    return next(error);
+  }
 
   try {
     const post = new Post({
       title: title,
       content: content,
-      imageUrl: "images/img1.jpg",
+      imageUrl: req.file.path.replace("\\", "/"),
       creator: {
         name: "post creator",
       },
@@ -51,7 +56,6 @@ exports.createPost = async (req, res, next) => {
 
 exports.getPost = async (req, res, next) => {
   const postId = req.params.postId;
-  console.log("postid is", postId);
 
   try {
     const post = await Post.findById(postId);
