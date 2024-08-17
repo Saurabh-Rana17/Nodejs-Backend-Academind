@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
+const clearFile = require("../utils/clearFile");
 
 exports.getPosts = async (req, res, next) => {
   try {
@@ -69,6 +70,51 @@ exports.getPost = async (req, res, next) => {
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
+    }
+    return next(error);
+  }
+};
+
+exports.updatePost = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("validaton failed entered data is incorrect");
+    error.statusCode = 422;
+    return next(error);
+  }
+  const postId = req.params.postId;
+  let { title, content } = req.body;
+  let imageUrl = req.body.image;
+  if (req.file) {
+    imageUrl = req.file.path.replace("\\", "/");
+  }
+  if (!imageUrl) {
+    const err = new Error("no file selected");
+    err.statusCode = 422;
+    return next(err);
+  }
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      const err = new Error("post does not exist");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    if (post.imageUrl !== imageUrl) {
+      clearFile(post.imageUrl);
+    }
+    post.title = title;
+    post.content = content;
+    post.imageUrl = imageUrl;
+    const updatedPost = await post.save();
+    return res
+      .status(200)
+      .json({ message: "Updated successfully", post: updatedPost });
+  } catch (error) {
+    if (!error.statusCode) {
+      err.statusCode = 500;
     }
     return next(error);
   }
