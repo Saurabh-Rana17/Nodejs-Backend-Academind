@@ -5,11 +5,14 @@ exports.getPosts = async (req, res, next) => {
   try {
     const posts = await Post.find();
 
-    return res.status(200).json({
-      posts,
-    });
+    return res
+      .status(200)
+      .json({ message: "fetched post successfully", posts });
   } catch (error) {
-    next(new Error(error).message);
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    return next(error);
   }
 };
 
@@ -43,5 +46,26 @@ exports.createPost = async (req, res, next) => {
       error.statusCode = 500;
     }
     next(error);
+  }
+};
+
+exports.getPost = async (req, res, next) => {
+  const postId = req.params.postId;
+  console.log("postid is", postId);
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      const error = new Error("Did not found any post ");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return res.status(200).json({ message: "Post fetched successfullt", post });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    return next(error);
   }
 };
