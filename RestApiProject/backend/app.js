@@ -3,29 +3,22 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const feedRoutes = require("./routes/feed");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
-// app.use(bodyParser.urlEncoded()); // x-www-form-urlencoded <form>
-app.use(bodyParser.json()); // application/json
+app.use(bodyParser.json());
 
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/feed", feedRoutes);
 
 app.use((err, req, res, next) => {
-  return res
-    .status(500)
-    .json({ message: "something went wrong", data: "data is" + err });
+  // console.log(err);
+  const status = err.statusCode || 500;
+  const message = err.message;
+
+  return res.status(status).json({ message });
 });
 
 mongoose
