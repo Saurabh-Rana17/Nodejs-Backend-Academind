@@ -114,6 +114,11 @@ exports.updatePost = async (req, res, next) => {
       err.statusCode = 404;
       return next(err);
     }
+    if (post.creator.toString() !== req.userId) {
+      const err = new Error("Not authorized");
+      err.statusCode = 403;
+      return next(err);
+    }
 
     if (post.imageUrl !== imageUrl) {
       clearFile(post.imageUrl);
@@ -127,7 +132,7 @@ exports.updatePost = async (req, res, next) => {
       .json({ message: "Updated successfully", post: updatedPost });
   } catch (error) {
     if (!error.statusCode) {
-      err.statusCode = 500;
+      error.statusCode = 500;
     }
     return next(error);
   }
@@ -142,8 +147,16 @@ exports.deletePost = async (req, res, next) => {
       err.statusCode = 404;
       return next(err);
     }
+    if (post.creator.toString() !== req.userId) {
+      const error = new Error("not authorized");
+      error.statusCode = 403;
+      return next(error);
+    }
     clearFile(post.imageUrl);
     const result = await Post.findByIdAndDelete(postId);
+    const user = await User.findById(req.userId);
+    user.posts.pull(postId);
+    await user.save();
     return res
       .status(200)
       .json({ message: "post deleted successfully", result });

@@ -20,7 +20,7 @@ app.use((err, req, res, next) => {
   const status = err.statusCode || 500;
   const message = err.message;
   const data = err.data;
-
+  console.log(err);
   return res.status(status).json({ message, data });
 });
 
