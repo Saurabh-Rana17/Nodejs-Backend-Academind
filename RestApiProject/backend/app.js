@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const feedRoutes = require("./routes/feed");
 const path = require("path");
 const authRoutes = require("./routes/auth");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 

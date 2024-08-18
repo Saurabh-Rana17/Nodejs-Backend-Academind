@@ -36,6 +36,7 @@ class App extends Component {
       this.logoutHandler();
       return;
     }
+    console.log(new Date(expiryDate), "---------", new Date());
     const userId = localStorage.getItem("userId");
     const remainingMilliseconds =
       new Date(expiryDate).getTime() - new Date().getTime();
@@ -65,7 +66,16 @@ class App extends Component {
   loginHandler = (event, authData) => {
     event.preventDefault();
     this.setState({ authLoading: true });
-    fetch("URL")
+    fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: authData.email,
+        password: authData.password,
+      }),
+    })
       .then((res) => {
         if (res.status === 422) {
           throw new Error("Validation failed.");
