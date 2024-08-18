@@ -3,12 +3,20 @@ const Post = require("../models/post");
 const clearFile = require("../utils/clearFile");
 
 exports.getPosts = async (req, res, next) => {
-  try {
-    const posts = await Post.find();
+  const page = req.query.page || 1;
+  const perPage = 2;
 
-    return res
-      .status(200)
-      .json({ message: "fetched post successfully", posts });
+  try {
+    const totalItems = await Post.find().countDocuments();
+    const posts = await Post.find()
+      .skip((page - 1) * perPage)
+      .limit(perPage);
+
+    return res.status(200).json({
+      message: "fetched post successfully",
+      posts,
+      totalItems: totalItems,
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
