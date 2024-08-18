@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const clearFile = require("../utils/clearFile");
+const User = require("../models/user");
 
 exports.getPosts = async (req, res, next) => {
   const page = req.query.page || 1;
@@ -9,6 +10,7 @@ exports.getPosts = async (req, res, next) => {
   try {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find()
+      .populate("creator", " name")
       .skip((page - 1) * perPage)
       .limit(perPage);
 
@@ -39,21 +41,24 @@ exports.createPost = async (req, res, next) => {
     error.statusCode = 422;
     return next(error);
   }
+  const userId = req.userId;
 
   try {
     const post = new Post({
       title: title,
       content: content,
       imageUrl: req.file.path.replace("\\", "/"),
-      creator: {
-        name: "post creator",
-      },
+      creator: userId,
     });
     const result = await post.save();
+    const user = await User.findById(userId);
+    user.posts.push(post);
+    const updatedUser = await user.save();
 
     return res.status(201).json({
       message: "Post created successfully!",
       post: result,
+      creator: { _id: updatedUser._id, name: updatedUser.name },
     });
   } catch (error) {
     if (!error.statusCode) {

@@ -20,7 +20,6 @@ exports.isAuth = (req, res, next) => {
     err.statusCode = 401;
     return next(err);
   }
-
   req.userId = decodedToken.userId;
   next();
 };
