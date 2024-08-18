@@ -4,7 +4,7 @@ const clearFile = require("../utils/clearFile");
 
 exports.getPosts = async (req, res, next) => {
   const page = req.query.page || 1;
-  const perPage = 2;
+  const perPage = 4;
 
   try {
     const totalItems = await Post.find().countDocuments();
