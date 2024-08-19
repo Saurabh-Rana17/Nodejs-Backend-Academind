@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const feedRoutes = require("./routes/feed");
 const path = require("path");
 const authRoutes = require("./routes/auth");
-const jwt = require("jsonwebtoken");
+const statusRoutes = require("./routes/status");
 
 const app = express();
 
@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
+app.use("/user", statusRoutes);
 
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;

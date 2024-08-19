@@ -36,7 +36,6 @@ class App extends Component {
       this.logoutHandler();
       return;
     }
-    console.log(new Date(expiryDate), "---------", new Date());
     const userId = localStorage.getItem("userId");
     const remainingMilliseconds =
       new Date(expiryDate).getTime() - new Date().getTime();
