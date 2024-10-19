@@ -150,6 +150,7 @@ export const getInvoices = (
     const invoiceName = "invoice-" + orderId + ".pdf";
     const invoicePath = path.join("data", "invoices", invoiceName);
     const pdfDoc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
     pdfDoc.pipe(fs.createWriteStream(invoicePath));
     pdfDoc.pipe(res);
 
@@ -172,6 +173,5 @@ export const getInvoices = (
     pdfDoc.text("--------------");
     pdfDoc.fontSize(20).text("Total Price: $" + totalPrice);
     pdfDoc.end();
-    res.setHeader("Content-Type", "application/pdf");
   });
 };
