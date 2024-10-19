@@ -97,3 +97,28 @@
     height: 12rem;
   }
 }
+
+.card__content {
+  text-align: center;
+  padding: 0.5rem;
+  max-height: 100rem; /* Set a maximum height */
+  overflow: hidden; /* Hide overflow text */
+  position: relative; /* Allow absolute positioning of the ellipsis */
+}
+
+.product__description {
+  font-size: 1rem;
+  color: #757575;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+  display: -webkit-box; /* Required for webkit browsers */
+  -webkit-box-orient: vertical; /* Required for webkit browsers */
+  -webkit-line-clamp: 2; /* Limit to 3 lines, adjust as necessary */
+}
+
+/* Ensure that the product-item remains a consistent height */
+.product-item {
+  height: auto; /* Allow it to grow but set max height for description */
+}
