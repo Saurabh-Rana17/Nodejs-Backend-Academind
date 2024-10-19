@@ -46,6 +46,7 @@ hr {
   display: block; /* Prevent inline spacing issues */
   border-radius: 12px; /* Softer corners for the image */
   transition: transform 0.3s ease; /* Smooth scaling effect */
+  object-fit: cover;
 }
 
 .image img:hover {

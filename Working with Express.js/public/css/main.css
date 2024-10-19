@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #f0f4f8;
+  background-color: #f0f4f8; /* Light Gray */
   margin: 0;
   padding: 0;
   font-family: "Open Sans", sans-serif;
@@ -56,47 +56,48 @@ form {
 
 .btn {
   display: inline-block;
-  padding: 0.25rem 1rem;
+  padding: 0.5rem 1.5rem; /* Increased padding for a better look */
   text-decoration: none;
   font: inherit;
-  border: 1px solid #00695c;
-  color: #00695c;
+  border: 2px solid #007bff; /* Blue Border */
+  color: #007bff; /* Blue Text */
   background: white;
-  border-radius: 3px;
+  border-radius: 5px; /* Slightly rounded corners */
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
 
 .btn:hover,
 .btn:active {
-  background-color: #00695c;
-  color: white;
+  background-color: #007bff; /* Bright Blue on hover */
+  color: white; /* White Text */
 }
 
 .btn.danger {
-  color: red;
-  border-color: red;
+  color: #dc3545; /* Bootstrap Red */
+  border-color: #dc3545; /* Bootstrap Red */
 }
 
 .btn.danger:hover,
 .btn.danger:active {
-  background: red;
-  color: white;
+  background: #dc3545; /* Darker Red */
+  color: white; /* White Text */
 }
 
 .user-message {
   margin: auto;
   width: 90%;
-  border: 1px solid #4771fa;
-  padding: 0.5rem;
-  border-radius: 3px;
-  background: skyblue;
+  border: 2px solid #007bff; /* Blue Border */
+  padding: 1rem; /* Increased padding */
+  border-radius: 5px; /* Slightly rounded corners */
+  background: #e7f0ff; /* Light Blue Background */
   text-align: center;
 }
 
 .user-message--error {
-  border-color: red;
-  background-color: rgb(255, 120, 120);
-  color: red;
+  border-color: #dc3545; /* Red Border */
+  background-color: rgb(255, 120, 120); /* Light Red */
+  color: red; /* Red Text */
 }
 
 .pagination {
@@ -106,17 +107,19 @@ form {
 
 .pagination a {
   text-decoration: none;
-  color: #00695c;
-  padding: 0.5rem;
-  border: 1px solid #00695c;
+  color: #007bff; /* Blue Text */
+  padding: 0.5rem 1rem; /* More padding for clickable area */
+  border: 2px solid #007bff; /* Blue Border */
   margin: 0 1rem;
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
 
 .pagination a:hover,
 .pagination a:active,
 .pagination a.active {
-  background: #00695c;
-  color: white;
+  background: #007bff; /* Bright Blue Background */
+  color: white; /* White Text */
 }
 
 @media (min-width: 768px) {
