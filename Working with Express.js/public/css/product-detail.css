@@ -15,6 +15,7 @@ main.centered:hover {
 }
 
 h1 {
+  text-transform: capitalize;
   font-size: 2.4rem; /* Slightly larger title for prominence */
   color: #333333;
   margin-bottom: 1rem;
