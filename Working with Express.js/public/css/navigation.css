@@ -1,15 +1,15 @@
 /* Main Header Styling */
 .main-header {
   width: 100%;
-  height: 3.5rem;
-  background-color: #007bff; /* Blue Background */
-  padding: 0 1.5rem;
+  height: 4.5rem; /* Increased height for larger navbar */
+  background-color: #0056b3; /* Darker blue for a modern look */
+  padding: 0 2rem; /* Increased padding for more spacing */
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More prominent shadow */
 }
 
 /* Main Navigation */
@@ -31,19 +31,19 @@
 
 /* Navigation Items */
 .main-header__item {
-  margin: 0 1rem;
-  padding: 0;
+  margin: 0 1.5rem; /* More spacing between items */
 }
 
 .main-header__item a,
 .main-header__item button {
   font: inherit;
+  font-size: 1.2rem; /* Larger font size */
   background: transparent;
   border: none;
   text-decoration: none;
   color: white; /* White Text */
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, border-bottom 0.3s ease; /* Added border transition */
   padding: 0.5rem;
 }
 
@@ -53,13 +53,13 @@
 .main-header__item button:hover,
 .main-header__item button:active {
   color: #ffeb3b; /* Yellow on hover */
-  border-bottom: 2px solid #ffeb3b; /* Yellow underline */
+  border-bottom: 3px solid #ffeb3b; /* Thicker yellow underline */
 }
 
 #side-menu-toggle {
-  border: 1px solid white; /* White border */
+  border: 2px solid white; /* Thicker white border */
   font: inherit;
-  padding: 0.5rem;
+  padding: 0.7rem;
   background: transparent;
   color: white; /* White Text */
   cursor: pointer;
@@ -78,7 +78,7 @@
 
 /* Mobile Navigation */
 .mobile-nav {
-  width: 30rem;
+  width: 35rem; /* Increased width */
   height: 100vh;
   max-width: 90%;
   position: fixed;
@@ -86,10 +86,10 @@
   top: 0;
   background: white; /* White background for the mobile nav */
   z-index: 10;
-  padding: 2rem 1rem 1rem 2rem;
+  padding: 2.5rem 1.5rem 1.5rem 2.5rem; /* Increased padding */
   transform: translateX(-100%);
   transition: transform 0.3s ease-out;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2); /* Stronger shadow */
 }
 
 .mobile-nav.open {
@@ -105,7 +105,7 @@
 }
 
 .mobile-nav__item {
-  margin: 1rem 0;
+  margin: 1.5rem 0; /* Increased margin */
 }
 
 .mobile-nav__item a,
@@ -113,8 +113,8 @@
   font: inherit;
   text-decoration: none;
   color: #333; /* Dark Gray for Mobile Nav Items */
-  font-size: 1.5rem;
-  padding: 0.5rem 2rem;
+  font-size: 1.6rem; /* Larger font size */
+  padding: 0.7rem 2.5rem; /* More padding */
   background: transparent;
   border: none;
   cursor: pointer;
@@ -126,9 +126,9 @@
 .mobile-nav__item a.active,
 .mobile-nav__item button:hover,
 .mobile-nav__item button:active {
-  background: #007bff; /* Blue background on hover */
+  background: #0056b3; /* Darker blue on hover */
   color: white; /* White Text on hover */
-  border-radius: 3px; /* Rounded corners */
+  border-radius: 5px; /* Slightly larger rounded corners */
 }
 
 @media (min-width: 768px) {
