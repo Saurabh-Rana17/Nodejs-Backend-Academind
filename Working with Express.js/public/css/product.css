@@ -21,6 +21,7 @@
 }
 
 .product__title {
+  text-transform: capitalize;
   font-size: 1.5rem;
   color: #333; /* Dark color for title */
   margin-top: 0;
@@ -31,7 +32,7 @@
   height: 15rem;
   overflow: hidden;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .card__image img {
@@ -57,14 +58,15 @@
   font-size: 1.4rem;
   color: #2e7d32; /* Dark green for price */
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
+  margin-top: 0rem;
 }
 
 .product__description {
   font-size: 1rem;
   color: #757575; /* Light gray for description text */
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin: 0.5rem;
   overflow: hidden; /* Hide overflow text */
   text-overflow: ellipsis; /* Add ellipsis for overflow text */
   display: -webkit-box; /* Required for webkit browsers */

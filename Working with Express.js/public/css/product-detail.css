@@ -61,7 +61,7 @@ p {
 }
 
 .btn {
-  background-color: #00796b; /* Primary button color */
+  background-color: #007bff; /* Primary button color */
   color: #ffffff; /* White text for contrast */
   padding: 0.75rem 1.5rem; /* Increased padding for a larger button */
   border: none;
@@ -73,7 +73,7 @@ p {
 }
 
 .btn:hover {
-  background-color: #004d40; /* Darker shade on hover */
+  background-color: #0056b3; /* Darker shade on hover */
   transform: translateY(-2px); /* Subtle lift effect on hover */
 }
 

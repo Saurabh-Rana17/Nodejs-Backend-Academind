@@ -6,7 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import PDFDocument from "pdfkit";
 
-const ITEM_PER_PAGE = 3;
+const ITEM_PER_PAGE = 6;
 
 export const getProducts = async (req: Request, res: Response) => {
   const page = Number(req.query.page) || 1;
