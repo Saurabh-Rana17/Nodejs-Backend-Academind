@@ -126,7 +126,7 @@
 .mobile-nav__item a.active,
 .mobile-nav__item button:hover,
 .mobile-nav__item button:active {
-  background: #0056b3; /* Darker blue on hover */
+  background: #007bff; /* Darker blue on hover */
   color: white; /* White Text on hover */
   border-radius: 5px; /* Slightly larger rounded corners */
 }
